@@ -2,8 +2,8 @@
 export METTA=$HOME/metta-wam/mettalog
 #Ok let's build the MeTTa file with the example code added:
 cd src
-sh build.sh > ../RUN.metta
+sh build.sh
 cd ..
-cat $1 >> RUN.metta
+cat PLN.metta $1 > RUN.metta
 #Done, let's run it:
 $METTA RUN.metta
