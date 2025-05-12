@@ -1,2 +1,2 @@
-# Logico
-Logico PLN implementation
+# PLN
+Modern PLN implementation
