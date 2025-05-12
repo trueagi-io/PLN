@@ -1,8 +1,8 @@
 # PLN
 Modern PLN implementation for Hyperon
 
-## Run example:
+## Wiki
 
-Running the famous Tuffy Smokes example:
+Please check out the Wiki:
 
-```sh run.sh ./examples/Smokes.metta```
+https://github.com/nartech-ai/PLN/wiki
