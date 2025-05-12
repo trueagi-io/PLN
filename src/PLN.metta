@@ -25,6 +25,7 @@
    (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
 
 ; Consistency Conditions: PLN book "5.2.2.2 PLN Deduction and Second-Order Probability", page 74:
+; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
 (: smallest-intersection-probability (-> Number Number Number))
 (= (smallest-intersection-probability $As $Bs)
    (clamp (/ (- (+ $As $Bs) 1) $As) 0 1))
@@ -41,7 +42,8 @@
 
 ;; TRUTH FORMULAS
 
-;Deduction formula: PLN book "1.4 Truth-value Formulas", page 15:
+; Deduction formula: PLN book "1.4 Truth-value Formulas", page 15:
+; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
 (= (Truth_Deduction (stv $Ps $Pc)
                     (stv $Qs $Qc)
                     (stv $Rs $Rc)
