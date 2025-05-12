@@ -1,5 +1,5 @@
 # PLN
-Modern PLN implementation
+Modern PLN implementation for Hyperon
 
 ## Run example:
 
