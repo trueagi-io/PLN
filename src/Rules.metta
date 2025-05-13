@@ -55,3 +55,14 @@
        ((Inheritance (Concept $S) (Concept $C2)) $T2))
        ((Evaluation (Predicate $x)
                     (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
+
+
+
+; negation introduction
+; takes only unary
+(= (|- ($x $t)
+       ; CONTROL : don't derive if it is already a NotLink
+       (If (Not (Same $x (NotLink $_)))
+              ((NotLink $x) (Truth_negationIntroduction $t))
+       )
+))
