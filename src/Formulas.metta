@@ -64,3 +64,16 @@
           ($f (/ (+ (* $w1 $f1) (* $w2 $f2)) $w)) ($c (Truth_w2c $w)))
           (stv (min 1.00 $f) 
                (min 1.0 (max (max $c $c1) $c2)))))
+
+; negation
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
+(= (Truth_negationIntroduction (stv $s $c))
+   (stv (- 1.0 $s) $c)
+)
+
+; negation elimination
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
+(= (Truth_negationElimination (stv $s $c))
+   (stv (- 1.0 $s) $c)
+)
+
