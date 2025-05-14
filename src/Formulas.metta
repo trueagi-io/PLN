@@ -67,6 +67,6 @@
 
 ; negation
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
-(= (Truth_negationIntroduction (stv s c))
-   (stv (- 1.0 s) c)
+(= (Truth_negationIntroduction (stv $s $c))
+   (stv (- 1.0 $s) $c)
 )
