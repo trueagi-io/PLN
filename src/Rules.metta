@@ -73,3 +73,11 @@
 ; manual test
 ; !(println (|- ((NotLink ZZZ) (stv 0.5 0.5)) (ZZZb (stv 0.5 0.5)) ))
 ; ; (must not return anything)
+
+
+; not elimination rule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
+(= (|- ((NotLink $x) $t) ($dummyTerm $dummyTruth))
+       ($x (Truth_negationElimination $t))
+)
+
