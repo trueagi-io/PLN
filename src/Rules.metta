@@ -60,15 +60,16 @@
 
 ; negation introduction
 ; takes only one premise (is unary)
-(= (|- ($x $t))
+; implemented as binary, 2nd premise is ignored
+(= (|- ($x $t) ($dummyTerm $dummyTruth))
        ; CONTROL : don't derive if it is already a NotLink
-       ;(If (not (== $x (NotLink $_)))
+       (If (not (== $x (NotLink $_)))
               ((NotLink $x) (Truth_negationIntroduction $t))
-       ;)
+       )
 )
 
 ; manual test
-;  !(println (|- (ZZZ (stv 0.5 0.5))))
-; doesnt work
-
-; !(println (|- (ZZZ (stv 0.5 0.5))))
+; !(println (|- (ZZZ (stv 0.5 0.5)) (ZZZb (stv 0.5 0.5)) ))
+; manual test
+; !(println (|- ((NotLink ZZZ) (stv 0.5 0.5)) (ZZZb (stv 0.5 0.5)) ))
+; ; (must not return anything)
