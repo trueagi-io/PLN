@@ -59,10 +59,16 @@
 
 
 ; negation introduction
-; takes only unary
-(= (|- ($x $t)
+; takes only one premise (is unary)
+(= (|- ($x $t))
        ; CONTROL : don't derive if it is already a NotLink
-       (If (Not (Same $x (NotLink $_)))
+       ;(If (not (== $x (NotLink $_)))
               ((NotLink $x) (Truth_negationIntroduction $t))
-       )
-))
+       ;)
+)
+
+; manual test
+;  !(println (|- (ZZZ (stv 0.5 0.5))))
+; doesnt work
+
+; !(println (|- (ZZZ (stv 0.5 0.5))))
