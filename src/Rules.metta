@@ -56,28 +56,16 @@
        ((Evaluation (Predicate $x)
                     (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
 
-
-
 ; negation introduction
 ; takes only one premise (is unary)
 ; implemented as binary, 2nd premise is ignored
-(= (|- ($x $t) ($dummyTerm $dummyTruth))
+(= (|- ($x $t))
        ; CONTROL : don't derive if it is already a NotLink
        (If (not (== $x (NotLink $_)))
-              ((NotLink $x) (Truth_negationIntroduction $t))
-       )
-)
-
-; manual test
-; !(println (|- (ZZZ (stv 0.5 0.5)) (ZZZb (stv 0.5 0.5)) ))
-; manual test
-; !(println (|- ((NotLink ZZZ) (stv 0.5 0.5)) (ZZZb (stv 0.5 0.5)) ))
-; ; (must not return anything)
-
+              ((NotLink $x) (Truth_negationIntroduction $t))))
 
 ; not elimination rule
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|- ((NotLink $x) $t) ($dummyTerm $dummyTruth))
-       ($x (Truth_negationElimination $t))
-)
+(= (|- ((NotLink $x) $t))
+       ($x (Truth_negationElimination $t)))
 
