@@ -59,9 +59,8 @@
 ; negation introduction
 ; takes only one premise (is unary)
 (= (|- ($x $t))
-       ; CONTROL : don't derive if it is already a NotLink
-       (If (not (== $x (NotLink $_)))
-              ((NotLink $x) (Truth_negationIntroduction $t))))
+       (if (not (== $x (NotLink $_))) ;don't derive if it is already a NotLink
+           ((NotLink $x) (Truth_negationIntroduction $t)) ()))
 
 ; not elimination rule
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8

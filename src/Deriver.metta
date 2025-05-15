@@ -2,29 +2,29 @@
 (= (StampDisjoint $Ev1 $Ev2)
    (== () (collapse (let* (($x (superpose $Ev1))
                            ($y (superpose $Ev2)))
-                          (case (== $x $y) ((True overlap)))))))
+                          (case (== $x $y) ((True True)))))))
 
 ;; Exhaustive-until-depth deriver
 (= (Derive $beliefs $depth $maxdepth)
-   (If (> $depth $maxdepth)
+   (if (> $depth $maxdepth)
        $beliefs
        (let $derivations 
             (collapse (superpose ((let* (((Sentence $x $Ev1) (superpose $beliefs))
                                          ((Sentence $y $Ev2) (superpose $beliefs))
                                          ($stamp (TupleConcat $Ev1 $Ev2)))
-                                        (If (StampDisjoint $Ev1 $Ev2)
-                                            (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp))))))
+                                        (if (StampDisjoint $Ev1 $Ev2)
+                                            (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp)))) ()))
                                   (let (Sentence $z $Ev3) (superpose $beliefs)
                                         (case (|- $z) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev3))))))))
             (Derive (TupleConcat $beliefs $derivations) (+ $depth 1) $maxdepth))))
 
 ;retrieve the best candidate
 (= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
-  (If (== $tuple ())
+  (if (== $tuple ())
       $bestCandidate
       (let* (($head (car-atom $tuple))
              ($tail (cdr-atom $tuple)))
-            (If (> ($evaluateCandidateFunction $head)
+            (if (> ($evaluateCandidateFunction $head)
                    ($evaluateCandidateFunction $bestCandidate))
                 (BestCandidate $evaluateCandidateFunction $head $tail)
                 (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
