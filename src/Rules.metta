@@ -58,7 +58,6 @@
 
 ; negation introduction
 ; takes only one premise (is unary)
-; implemented as binary, 2nd premise is ignored
 (= (|- ($x $t))
        ; CONTROL : don't derive if it is already a NotLink
        (If (not (== $x (NotLink $_)))
