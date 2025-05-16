@@ -28,27 +28,29 @@
 
 
 ;Deduction
-(= (|- ((Inheritance (Concept $A) (Concept $B)) $T1) 
+(= (|- ((Inheritance (Concept $A) (Concept $B)) $T1)
        ((Inheritance (Concept $B) (Concept $C)) $T2))
-       ((Inheritance $A $C) 
-        (Truth_Deduction (STV $A) 
-                         (STV $B)
-                         (STV $C) $T1 $T2)))
+       ((Inheritance (Concept $A) (Concept $C))
+        (Truth_Deduction (STV (Concept $A))
+                         (STV (Concept $B))
+                         (STV (Concept $C)) $T1 $T2)))
 
 ;Induction
-(= (|- ((Inheritance (Concept $C) 
+(= (|- ((Inheritance (Concept $C)
                      (Concept $A)) $T1)
-       ((Inheritance (Concept $C) 
+       ((Inheritance (Concept $C)
                      (Concept $B)) $T2))
-       ((Inheritance $A 
-                     $B) (Truth_Induction (STV $A) 
-                                          (STV $B)
-                                          (STV $C) $T1 $T2)))
+       ((Inheritance (Concept $A)
+                     (Concept $B)) (Truth_Induction (STV (Concept $A))
+                                                    (STV (Concept $B))
+                                                    (STV (Concept $C)) $T1 $T2)))
 ;Abduction
 (= (|- ((Inheritance (Concept $A) (Concept $C)) $T1)
        ((Inheritance (Concept $B) (Concept $C)) $T2))
-       ((Inheritance $A $B)
-        (Truth_Abduction (STV $A) (STV $B) (STV $C) $T1 $T2)))
+       ((Inheritance (Concept $A) (Concept $B))
+        (Truth_Abduction (STV (Concept $A))
+                         (STV (Concept $B))
+                         (STV (Concept $C)) $T1 $T2)))
 
 
 ;Usage of inheritance for predicates
