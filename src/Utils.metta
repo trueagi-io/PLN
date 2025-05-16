@@ -1,9 +1,9 @@
 ; MeTTa standard lib extension
-(: (max (-> Number Number Bool)))
+(: (max (-> Number Number Number)))
 (= (max $1 $2)
    (if (> $1 $2) $1 $2))
 
-(: (min (-> Number Number Bool)))
+(: (min (-> Number Number Number)))
 (= (min $1 $2)
    (if (< $1 $2) $1 $2))
 
