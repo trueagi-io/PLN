@@ -15,7 +15,7 @@
     
     (Sentence ((Inheritance (Concept Pingu)
                             (Concept Penguin))
-              (stv 0.99 0.9)) (1))
+              (stv 0.99 0.9)) (2))
     
     (Sentence ((Evaluation (Predicate flies) 
                            (List (Concept Penguin)))
@@ -23,15 +23,15 @@
 
     (Sentence ((Inheritance (Concept Raven)
                             (Concept Bird))
-              (stv 0.99 0.9)) (2))
+              (stv 0.99 0.9)) (4))
     
     (Sentence ((Inheritance (Concept Penguin)
                             (Concept Bird))
-              (stv 0.99 0.9)) (2))
+              (stv 0.99 0.9)) (5))
 
     (Sentence ((Evaluation (Predicate flies) 
                            (List (Concept Bird)))
-              (stv 0.99 0.9)) (3))
+              (stv 0.99 0.9)) (6))
    ))
 
 !(Question (kb)
