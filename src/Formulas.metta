@@ -50,6 +50,15 @@
    (stv (+ (* $f1 $f2) (* 0.02 (- 1 $f1)))
         (min $c1 $c2)))
 
+; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
+(= (Truth_SymmetricModusPonens (stv $sA $cA) (stv $sAB $cAB))
+   (let*
+      (($snotAB 0.2)
+       ($cnotAB 1.0))
+      (stv
+         (+ (* $sA $sAB) (* (* $snotAB (negate $sA)) (+ 1.0 $sAB))) 
+         (min (min $cAB $cnotAB) $cA))))
+
 ;Revision: PLN Book "5.10.2 A Heuristic Revision Rule for Simple Truth-values", page 116:
 (: Truth_c2w (-> Number Number))
 (= (Truth_c2w $c)
