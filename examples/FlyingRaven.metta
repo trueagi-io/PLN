@@ -8,7 +8,7 @@
                       (stv 0.99 0.9)) (2))
            )
 
-             (Evaluation (Predicate flies)
+           (Evaluation (Predicate flies)
                        (List (Concept Raven)))
 
           1)
