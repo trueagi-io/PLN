@@ -10,22 +10,17 @@
        ((Implication $A $B) $T2))
    ($B (Truth_ModusPonens $T1 $T2)))
 
+; guard to only allow inference for certain link types
+(= (SymmetricModusPonensRuleGuard Similarity) True)
+(= (SymmetricModusPonensRuleGuard IntentionalSimilarity) True)
+(= (SymmetricModusPonensRuleGuard ExtensionalSimilarity) True)
 
 ; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
 (= (|- ($A $TruthA)
-       ((Similarity $A $B) $TruthAB))
-   ($B (Truth_SymmetricModusPonens $TruthA $TruthAB)))
-
-; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
-(= (|- ($A $TruthA)
-       ((IntentionalSimilarity $A $B) $TruthAB))
-   ($B (Truth_SymmetricModusPonens $TruthA $TruthAB)))
-
-; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
-(= (|- ($A $TruthA)
-       ((ExtensionalSimilarity $A $B) $TruthAB))
-   ($B (Truth_SymmetricModusPonens $TruthA $TruthAB)))
-
+       (($LinkType $A $B) $TruthAB))
+   (if (SymmetricModusPonensRuleGuard $LinkType)
+      ($B (Truth_SymmetricModusPonens $TruthA $TruthAB))
+      ()))
 
 ;Deduction
 (= (|- ((Inheritance (Concept $A) (Concept $B)) $T1)
