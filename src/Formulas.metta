@@ -84,3 +84,7 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+
+(= (Truth_inversion (stv $s $c))
+   ; confidence penality not according to OpenCOG classic PLN. Is weaker in this implementation.
+   (stv $s (* $c 0.6)))

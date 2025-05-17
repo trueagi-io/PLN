@@ -84,3 +84,17 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+
+; InversionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
+;
+; <LinkType>
+;   A
+;   B
+; |-
+; <LinkType>
+;   B
+;   A
+;
+; TODO LOW : implement and use inversion-consistency as Guardcondition
+(= (|- ((Inheritance $A $B) $Truth))
+   ((Inheritance $B $A) (Truth_inversion $Truth)))
