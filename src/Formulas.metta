@@ -23,7 +23,7 @@
 (= (Truth_Induction (stv $sA $cA)
                     (stv $sB $cB)
                     (stv $sC $cC)
-                    (stv $sAB $cAB)
+                    (stv $sBA $cBA)
                     (stv $sBC $cBC))
    (stv (+ (/ (* (* $sBA $sBC) $sB)
               $sA)
@@ -31,19 +31,19 @@
                       $sA))
               (/ (- $sC (* $sB $sBC))
                  (- 1 $sB))))
-        (Truth_w2c (min $cAB $cBc)))) ;confidence TODO check
+        (Truth_w2c (min $cBA $cBC)))) ;confidence TODO check
 
 ; Abduction formula: PLN book "Appendix A: Comparison of PLN Rules with NARS Rules", page 307
 (= (Truth_Abduction (stv $sA $cA)
                     (stv $sB $cB)
                     (stv $sC $cC)
                     (stv $sAB $cAB)
-                    (stv $sBC $cBC))
+                    (stv $sCB $cCB))
    (stv (+ (/ (* (* $sAB $sCB) $sC)
               $sB)
-           (/ (* sC (* (- 1 sAB) (- 1 sCB)))
-              (- 1 sB)))
-        (Truth_w2c (min $cAB $cBc)))) ;confidence TODO check
+           (/ (* $sC (* (- 1 $sAB) (- 1 $sCB)))
+              (- 1 $sB)))
+        (Truth_w2c (min $cAB $cCB)))) ;confidence TODO check
 
 ;Modus Ponens: PLN book "5.7.1 Modus Ponens", page 111:
 (= (Truth_ModusPonens (stv $f1 $c1) (stv $f2 $c2)) 

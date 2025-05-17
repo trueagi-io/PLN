@@ -23,9 +23,12 @@
       ()))
 
 ;Deduction
-(= (|- ((Inheritance (Concept $A) (Concept $B)) $T1)
-       ((Inheritance (Concept $B) (Concept $C)) $T2))
-       ((Inheritance (Concept $A) (Concept $C))
+(= (|- ((Inheritance (Concept $A)
+                     (Concept $B)) $T1)
+       ((Inheritance (Concept $B)
+                     (Concept $C)) $T2))
+       ((Inheritance (Concept $A)
+                     (Concept $C))
         (Truth_Deduction (STV (Concept $A))
                          (STV (Concept $B))
                          (STV (Concept $C)) $T1 $T2)))

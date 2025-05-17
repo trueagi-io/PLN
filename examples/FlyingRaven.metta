@@ -1,11 +1,17 @@
 (= (STV (Concept Sam))
-   (stv 0.333 1))
+   (stv 0.2 1))
+
+(= (STV (Concept Pingu))
+   (stv 0.2 1))
+
+(= (STV (Concept Penguin))
+   (stv 0.2 1))
 
 (= (STV (Concept Raven))
-   (stv 0.333 1))
+   (stv 0.2 1))
 
 (= (STV (Concept Bird))
-   (stv 0.333 1))
+   (stv 0.2 1))
 
 (= (kb)
    (
