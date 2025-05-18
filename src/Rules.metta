@@ -84,3 +84,8 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+
+; InheritanceToMemberRule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (|- ((Inheritance $B $C) $Truth))
+   ((MemberLink $B $C) (Truth_inheritanceToMember $Truth)))
