@@ -1,5 +1,9 @@
 ;; TRUTH FORMULAS
 
+; helper
+(= (getTerm ($Term $Truth)) $Term)
+(= (getTruth ($Term $Truth)) $Truth)
+
 ; Deduction formula: PLN book "1.4 Truth-value Formulas", page 15:
 ; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
 (= (Truth_Deduction (stv $Ps $Pc)
@@ -84,3 +88,7 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+
+; AndIntroductionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/and-introduction.scm
+(= (Truth_AndIntroduction (stv $As $Ac) (stv $Bs $Bc))
+   (stv (* $As $Bs) (min $Ac $Bc)))
