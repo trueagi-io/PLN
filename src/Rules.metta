@@ -86,6 +86,14 @@
 
 
 
+
+
+
+; higher-order inferences for left side of term with common right side of term
+; first item of argument tuple is the guard for which Link-Type to allow this inference
+
+; example:
+;
 ; Inheritance
 ;    A
 ;    R
@@ -99,12 +107,7 @@
 ;       A
 ;       B
 ;    R
-
-
-
-; higher-order inferences for left side of term with common right side of term
-; first item of argument tuple is the guard for which Link-Type to allow this inference
-
+;
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/and-introduction.scm
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/and-as-1st-arg-inside-inheritance-link.scm
 (= (InfHoILeftside Inheritance ($ATerm $ATruth) ($BTerm $BTruth))
