@@ -86,5 +86,5 @@
 
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
-(define (Truth_inheritanceToMember (stv $s $c))
+(= (Truth_inheritanceToMember (stv $s $c))
    (stv $s (* $c 0.9)))
