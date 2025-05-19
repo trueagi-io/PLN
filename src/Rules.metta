@@ -84,3 +84,8 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+
+; equivalence to implication rule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (|- ((EquivalenceLink $A $B) $ABTruth))
+   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A) (STV $B) $ABTruth)))
