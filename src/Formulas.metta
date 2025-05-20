@@ -84,3 +84,7 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/contraposition.scm
+(= (Truth_Contraposition (stv $s $c))
+   (stv $s $c))
