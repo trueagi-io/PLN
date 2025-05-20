@@ -87,8 +87,8 @@
 
 ; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
 ; Implication Implicant Conjunction Rule
-(= (|- (((Implication $A $C) $tvAC)
-        ((Implication $B $C) $tvBC)))
+(= (|- ((Implication $A $C) $tvAC)
+       ((Implication $B $C) $tvBC))
    (if (not (== $A $B)) ; GuardCondition: A is not identical to B
       (
          (Implication (AndLink $A $B) $C)
@@ -98,11 +98,10 @@
 
 ; ImplicationImplicantDisjunctionRule   see see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
 ; Implication Implicant Disjunction Rule
-(= (|- (((Implication $A $C) $tvAC)
-        ((Implication $B $C) $tvBC)))
+(= (|- ((Implication $A $C) $tvAC)
+        ((Implication $B $C) $tvBC))
    (if (not (== $A $B)) ; GuardCondition: A is not identical to B
       (
          (Implication (OrLink $A $B) $C)
          (Truth_ImplicationImplicantDisjunction (STV $A) (STV $B) (STV $C)  $tvAC $tvBC))
       ()))
-

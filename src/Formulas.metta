@@ -85,8 +85,6 @@
    (stv (- 1.0 $s) $c))
 
 
-
-
 (= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
    (min (/ (* $sAC $sBC) $sC) 1.0))
 
@@ -107,8 +105,8 @@
 (= (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
    (let* (($CinterA (* $sAC $sA))
           ($CinterB (* $sBC $sB))
-          ($Numerator (+ $CinterA $CinterB (* $CinterA $CinterB $sA $sB -1.0))) ; As per Scheme code
-          ($Denominator (+ $sA $sB (* $sA $sB -1.0))))
+          ($Numerator (+ $CinterA (+ $CinterB (* $CinterA (* $CinterB (* $sA (* $sB -1.0))))))) ; As per Scheme code
+          ($Denominator (+ (+ $sA $sB) (* $sA (* $sB -1.0)))))
      (if (== $Denominator 0.0) ; Avoid division by zero
          0.0 ; Undefined STV
          (/ $Numerator $Denominator))))

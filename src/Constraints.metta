@@ -19,6 +19,6 @@
    ; P(C|A) <= P(C)/P(A)  =>  $sAC <= $sC / $sA
    ; P(C|B) <= P(C)/P(B)  =>  $sBC <= $sC / $sB
    ; Also ensure denominators are not zero for the checks.
-   (and (> $As 0) (> $Bs 0) (> $Cs 0) ; Avoid division by zero and ensure meaningful probabilities
+   (and5 (> $As 0) (> $Bs 0) (> $Cs 0) ; Avoid division by zero and ensure meaningful probabilities
       (<= $ACs (/ $Cs $As))
       (<= $BCs (/ $Cs $Bs))))
