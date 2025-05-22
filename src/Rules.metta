@@ -84,3 +84,17 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+
+
+
+; FIXME : what is the correct TV here?
+(= (Truth_AssymetricToSymmetric $TruthA $TruthB) $TruthA)
+
+(= (AssymetricToSymmetricRuleGuard Inheritance Similarity) True)
+(= (AssymetricToSymmetricRuleGuard Implication Equivalence) True)
+
+(= (|- (($LinkTypePremise $A $B) $T1)
+       (($LinkTypePremise $B $A) $T2))
+   (if (AssymetricToSymmetricRuleGuard $LinkTypePremise $LinkTypeConcl)
+      (($LinkTypeConcl $A $B) (Truth_AssymetricToSymmetric $TruthA $TruthAB))
+      ()))
