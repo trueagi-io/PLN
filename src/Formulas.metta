@@ -84,3 +84,16 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+   (let* (
+      ($NAs (- 1.0 $As))
+      ($NSs (if (< $As 1.0)
+         (/ (- $Bs (* $ABs $As)) $NAs)
+         1.0))
+      ($NSc (if (< $As 1.0)
+         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $ABc)
+         0.0))
+      ($NStv (stv $NSs $NSc)))
+         $NStv))
