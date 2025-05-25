@@ -84,7 +84,11 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
-
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
 (= (|- ((SubsetLink $A $B) $TruthAB))
    ((SubsetLink (NotLink $A) $B)  (Truth_conditionNegation (STV $A) (STV $B) $TruthAB)))
+
+; InheritanceToMemberRule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (|- ((Inheritance $B $C) $Truth))
+   ((MemberLink $B $C) (Truth_inheritanceToMember $Truth)))
