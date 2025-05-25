@@ -84,7 +84,6 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
-
 ; guard to only allow inference for certain link types
 (= (ContrapositionRuleGuard Implication) True)
 (= (ContrapositionRuleGuard Inheritance) True)
@@ -96,3 +95,8 @@
    (if (and (ContrapositionRuleGuard $LinkType) (and (< 0.999 $ABs) (< 0.999 $ABc)))
       (($LinkType (NotLink $B) (NotLink $A)) (Truth_Contraposition (stv $ABs $ABc)))
       ()))
+
+; InheritanceToMemberRule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (|- ((Inheritance $B $C) $Truth))
+   ((MemberLink $B $C) (Truth_inheritanceToMember $Truth)))
