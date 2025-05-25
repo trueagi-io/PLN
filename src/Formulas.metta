@@ -84,7 +84,6 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
-
 (= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
    (min (/ (* $sAC $sBC) $sC) 1.0))
 
@@ -115,3 +114,7 @@
 (= (Truth_ImplicationImplicantDisjunction (stv $sA $cA) (stv $sB $cB) (stv $sC $cC) (stv $sAC $cAC) (stv $sBC $cBC))
    (stv (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
         (min $cAC $cBC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (Truth_inheritanceToMember (stv $s $c))
+   (stv $s (* $c 0.9)))

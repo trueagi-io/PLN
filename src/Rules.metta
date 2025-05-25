@@ -84,7 +84,6 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
-
 ; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
 ; Implication Implicant Conjunction Rule
 (= (|- ((Implication $A $C) $tvAC)
@@ -95,7 +94,6 @@
          (Truth_ImplicationImplicantConjunction (STV $A) (STV $B) (STV $C)  $tvAC $tvBC))
       ()))
 
-
 ; ImplicationImplicantDisjunctionRule   see see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
 ; Implication Implicant Disjunction Rule
 (= (|- ((Implication $A $C) $tvAC)
@@ -105,3 +103,8 @@
          (Implication (OrLink $A $B) $C)
          (Truth_ImplicationImplicantDisjunction (STV $A) (STV $B) (STV $C)  $tvAC $tvBC))
       ()))
+
+; InheritanceToMemberRule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (|- ((Inheritance $B $C) $Truth))
+   ((MemberLink $B $C) (Truth_inheritanceToMember $Truth)))
