@@ -97,6 +97,11 @@
       ($NStv (stv $NSs $NSc)))
          $NStv))
 
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/contraposition.scm
+(= (Truth_Contraposition (stv $s $c))
+   (stv $s $c))
+
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
 (= (Truth_inheritanceToMember (stv $s $c))
    (stv $s (* $c 0.9)))
