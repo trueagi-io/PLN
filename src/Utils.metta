@@ -14,5 +14,9 @@
 (= (TupleConcat $Ev1 $Ev2)
    (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
 
-
 (= (and5 $0 $1 $2 $3 $4) (and $0 (and $1 (and $2 (and $3 $4)))))
+
+(= (/safe $A $B)
+   (if (> $B 0.0)
+       (/ $A $B)
+       (empty)))

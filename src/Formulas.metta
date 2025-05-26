@@ -14,7 +14,7 @@
                 ;; Qs tends to 1
                 $Rs
                 ;; Otherwise
-                (+ (* $PQs $QRs) (/ (* (- 1 $PQs) (- $Rs (* $Qs $QRs))) (- 1 $Qs))))
+                (+ (* $PQs $QRs) (/safe (* (- 1 $PQs) (- $Rs (* $Qs $QRs))) (- 1 $Qs))))
             (min $Pc (min $Qc (min $Rc (min $PQc $QRc)))))
        ;; Preconditions are not met
        (stv 1 0)))
@@ -25,12 +25,9 @@
                     (stv $sC $cC)
                     (stv $sBA $cBA)
                     (stv $sBC $cBC))
-   (stv (+ (/ (* (* $sBA $sBC) $sB)
-              $sA)
-           (* (- 1 (/ (* $sBA $sB) 
-                      $sA))
-              (/ (- $sC (* $sB $sBC))
-                 (- 1 $sB))))
+   (stv (+ (/safe (* (* $sBA $sBC) $sB) $sA)
+           (* (- 1 (/safe (* $sBA $sB) $sA))
+              (/safe (- $sC (* $sB $sBC)) (- 1 $sB))))
         (Truth_w2c (min $cBA $cBC)))) ;confidence TODO check
 
 ; Abduction formula: PLN book "Appendix A: Comparison of PLN Rules with NARS Rules", page 307
@@ -39,10 +36,10 @@
                     (stv $sC $cC)
                     (stv $sAB $cAB)
                     (stv $sCB $cCB))
-   (stv (+ (/ (* (* $sAB $sCB) $sC)
-              $sB)
-           (/ (* $sC (* (- 1 $sAB) (- 1 $sCB)))
-              (- 1 $sB)))
+   (stv (+ (/safe (* (* $sAB $sCB) $sC)
+                  $sB)
+           (/safe (* $sC (* (- 1 $sAB) (- 1 $sCB)))
+                  (- 1 $sB)))
         (Truth_w2c (min $cAB $cCB)))) ;confidence TODO check
 
 ;Modus Ponens: PLN book "5.7.1 Modus Ponens", page 111:
@@ -62,25 +59,23 @@
 ;Revision: PLN Book "5.10.2 A Heuristic Revision Rule for Simple Truth-values", page 116:
 (: Truth_c2w (-> Number Number))
 (= (Truth_c2w $c)
-   (/ $c (- 1 $c)))
+   (/safe $c (- 1 $c)))
 
 (: Truth_w2c (-> Number Number))
 (= (Truth_w2c $w)
-   (/ $w (+ $w 1)))
+   (/safe $w (+ $w 1)))
 
 (= (Truth_Revision (stv $f1 $c1) (stv $f2 $c2))
    (let* (($w1 (Truth_c2w $c1)) ($w2 (Truth_c2w $c2)) ($w  (+ $w1 $w2))
-          ($f (/ (+ (* $w1 $f1) (* $w2 $f2)) $w)) ($c (Truth_w2c $w)))
+          ($f (/safe (+ (* $w1 $f1) (* $w2 $f2)) $w)) ($c (Truth_w2c $w)))
           (stv (min 1.00 $f) 
                (min 1.0 (max (max $c $c1) $c2)))))
 
-; negation
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
+; negation, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
 (= (Truth_negationIntroduction (stv $s $c))
    (stv (- 1.0 $s) $c))
 
-; negation elimination
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
+; negation elimination, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
@@ -90,32 +85,24 @@
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
-   (let* (
-      ($AB2s
-         ; HACK   to work around the lack of distributional
-         ;        TV. If ABs is high enough, we just set AB2s as ABs
-         (if
-            (< 0.99 (* $ABs $ABc))
-            $ABs
-            (/ (* (* 1.0 (/ $Bs $As)) $ABs) (+ 1.0 $ABs)) ; formula based on PLN book formula for sim2inh
-         )))
-      (stv $AB2s $ABc)))
+   (let* (($AB2s (if (< 0.99 (* $ABs $ABc)) ; HACK to work around the lack of distributional
+                     $ABs                   ; TV.  If ABs is high enough, we just set AB2s as ABs
+                     (/safe (* (* 1.0 (/safe $Bs $As)) $ABs) (+ 1.0 $ABs))))) ; see PLN book formula for sim2inh
+         (stv $AB2s $ABc)))
 
 (= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
-   (min (/ (* $sAC $sBC) $sC) 1.0))
+   (min (/safe (* $sAC $sBC) $sC) 1.0))
 
 (= (ImplicationImplicantConjunctionConfidence $cAC $cBC)
    (min $cAC $cBC))
 
-; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
-; Implication Implicant Conjunction Rule
+; Implication Implicant Conjunction Rule, see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
 (= (Truth_ImplicationImplicantConjunction (stv $As $Ac) (stv $Bs $Bc) (stv $Cs $Cc) (stv $ACs $ACc) (stv $BCs $BCc))   
    (if (Consistency_ImplicationImplicantConjunction $As $Bs $Cs $ACs $BCs)
-      (stv (ImplicationImplicantConjunctionStrength $Cs $ACs $BCs)
-           (ImplicationImplicantConjunctionConfidence $ACc $BCc))
-      ; Preconditions are not met
-      (stv 1 0)))
-
+       (stv (ImplicationImplicantConjunctionStrength $Cs $ACs $BCs)
+            (ImplicationImplicantConjunctionConfidence $ACc $BCc))
+       ; Preconditions are not met
+       (stv 1 0)))
 
 ; Implication Implicant Disjunction Strength Formula
 (= (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
@@ -125,30 +112,12 @@
           ($Denominator (+ (+ $sA $sB) (* $sA (* $sB -1.0)))))
      (if (== $Denominator 0.0) ; Avoid division by zero
          0.0 ; Undefined STV
-         (/ $Numerator $Denominator))))
+         (/safe $Numerator $Denominator))))
 
-; ImplicationImplicantDisjunctionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
+; Implication Implicant Disjunction Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
 (= (Truth_ImplicationImplicantDisjunction (stv $sA $cA) (stv $sB $cB) (stv $sC $cC) (stv $sAC $cAC) (stv $sBC $cBC))
    (stv (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
         (min $cAC $cBC)))
-
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
-(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
-   (let* (
-      ($NAs (- 1.0 $As))
-      ($NSs (if (< $As 1.0)
-         (/ (- $Bs (* $ABs $As)) $NAs)
-         1.0))
-      ($NSc (if (< $As 1.0)
-         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $ABc)
-         0.0))
-      ($NStv (stv $NSs $NSc)))
-         $NStv))
-
-
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/contraposition.scm
-(= (Truth_Contraposition (stv $s $c))
-   (stv $s $c))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
 (= (Truth_inheritanceToMember (stv $s $c))
