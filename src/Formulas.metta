@@ -84,6 +84,37 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+(= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
+   (min (/ (* $sAC $sBC) $sC) 1.0))
+
+(= (ImplicationImplicantConjunctionConfidence $cAC $cBC)
+   (min $cAC $cBC))
+
+; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
+; Implication Implicant Conjunction Rule
+(= (Truth_ImplicationImplicantConjunction (stv $As $Ac) (stv $Bs $Bc) (stv $Cs $Cc) (stv $ACs $ACc) (stv $BCs $BCc))   
+   (if (Consistency_ImplicationImplicantConjunction $As $Bs $Cs $ACs $BCs)
+      (stv (ImplicationImplicantConjunctionStrength $Cs $ACs $BCs)
+           (ImplicationImplicantConjunctionConfidence $ACc $BCc))
+      ; Preconditions are not met
+      (stv 1 0)))
+
+
+; Implication Implicant Disjunction Strength Formula
+(= (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
+   (let* (($CinterA (* $sAC $sA))
+          ($CinterB (* $sBC $sB))
+          ($Numerator (+ $CinterA (+ $CinterB (* $CinterA (* $CinterB (* $sA (* $sB -1.0))))))) ; As per Scheme code
+          ($Denominator (+ (+ $sA $sB) (* $sA (* $sB -1.0)))))
+     (if (== $Denominator 0.0) ; Avoid division by zero
+         0.0 ; Undefined STV
+         (/ $Numerator $Denominator))))
+
+; ImplicationImplicantDisjunctionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
+(= (Truth_ImplicationImplicantDisjunction (stv $sA $cA) (stv $sB $cB) (stv $sC $cC) (stv $sAC $cAC) (stv $sBC $cBC))
+   (stv (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
+        (min $cAC $cBC)))
+
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
 (= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
    (let* (
