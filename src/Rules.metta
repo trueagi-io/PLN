@@ -84,6 +84,11 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+; equivalence to implication rule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (|- ((EquivalenceLink $A $B) $ABTruth))
+   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A) (STV $B) $ABTruth)))
+
 ; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
 ; Implication Implicant Conjunction Rule
 (= (|- ((Implication $A $C) $tvAC)

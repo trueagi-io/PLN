@@ -84,6 +84,19 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+   (let* (
+      ($AB2s
+         ; HACK   to work around the lack of distributional
+         ;        TV. If ABs is high enough, we just set AB2s as ABs
+         (if
+            (< 0.99 (* $ABs $ABc))
+            $ABs
+            (/ (* (* 1.0 (/ $Bs $As)) $ABs) (+ 1.0 $ABs)) ; formula based on PLN book formula for sim2inh
+         )))
+      (stv $AB2s $ABc)))
+
 (= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
    (min (/ (* $sAC $sBC) $sC) 1.0))
 
