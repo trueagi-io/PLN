@@ -84,7 +84,6 @@
 (= (Truth_negationElimination (stv $s $c))
    (stv (- 1.0 $s) $c))
 
-
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
    (let* (
@@ -97,3 +96,56 @@
             (/ (* (* 1.0 (/ $Bs $As)) $ABs) (+ 1.0 $ABs)) ; formula based on PLN book formula for sim2inh
          )))
       (stv $AB2s $ABc)))
+
+(= (ImplicationImplicantConjunctionStrength $sC $sAC $sBC)
+   (min (/ (* $sAC $sBC) $sC) 1.0))
+
+(= (ImplicationImplicantConjunctionConfidence $cAC $cBC)
+   (min $cAC $cBC))
+
+; ImplicationImplicantConjunctionRule   see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
+; Implication Implicant Conjunction Rule
+(= (Truth_ImplicationImplicantConjunction (stv $As $Ac) (stv $Bs $Bc) (stv $Cs $Cc) (stv $ACs $ACc) (stv $BCs $BCc))   
+   (if (Consistency_ImplicationImplicantConjunction $As $Bs $Cs $ACs $BCs)
+      (stv (ImplicationImplicantConjunctionStrength $Cs $ACs $BCs)
+           (ImplicationImplicantConjunctionConfidence $ACc $BCc))
+      ; Preconditions are not met
+      (stv 1 0)))
+
+
+; Implication Implicant Disjunction Strength Formula
+(= (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
+   (let* (($CinterA (* $sAC $sA))
+          ($CinterB (* $sBC $sB))
+          ($Numerator (+ $CinterA (+ $CinterB (* $CinterA (* $CinterB (* $sA (* $sB -1.0))))))) ; As per Scheme code
+          ($Denominator (+ (+ $sA $sB) (* $sA (* $sB -1.0)))))
+     (if (== $Denominator 0.0) ; Avoid division by zero
+         0.0 ; Undefined STV
+         (/ $Numerator $Denominator))))
+
+; ImplicationImplicantDisjunctionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
+(= (Truth_ImplicationImplicantDisjunction (stv $sA $cA) (stv $sB $cB) (stv $sC $cC) (stv $sAC $cAC) (stv $sBC $cBC))
+   (stv (ImplicationImplicantDisjunctionStrength $sA $sB $sAC $sBC)
+        (min $cAC $cBC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+   (let* (
+      ($NAs (- 1.0 $As))
+      ($NSs (if (< $As 1.0)
+         (/ (- $Bs (* $ABs $As)) $NAs)
+         1.0))
+      ($NSc (if (< $As 1.0)
+         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $ABc)
+         0.0))
+      ($NStv (stv $NSs $NSc)))
+         $NStv))
+
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/contraposition.scm
+(= (Truth_Contraposition (stv $s $c))
+   (stv $s $c))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
+(= (Truth_inheritanceToMember (stv $s $c))
+   (stv $s (* $c 0.9)))
