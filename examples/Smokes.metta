@@ -1,20 +1,20 @@
 (= (STV (Concept Anna))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 (= (STV (Concept Bob))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 (= (STV (Concept Edward))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 (= (STV (Concept Frank))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 (= (STV (Concept Gary))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 (= (STV (Concept Helen))
-   (stv 0.1667 1))
+   (stv 0.1667 0.9))
 
 !(Question (
             (Sentence ((Implication (Evaluation (Predicate friend) 
@@ -66,7 +66,7 @@
 
             ;(Sentence ((Evaluation (Predicate smokes) 
             ;                       (List (Concept Edward)))
-            ;          (stv 1.0 0.9)) (10))
+            ;           (stv 1.0 0.9)) (10))
            )
 
            (Evaluation (Predicate cancerous)
