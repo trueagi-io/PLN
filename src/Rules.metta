@@ -84,6 +84,17 @@
 (= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
+; guard to only allow inference for certain link types
+(= (ContrapositionRuleGuard Implication) True)
+(= (ContrapositionRuleGuard Inheritance) True)
+(= (ContrapositionRuleGuard ImplicationScopeLink) True)
+
+; contraposition rule
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/contraposition.scm
+(= (|- (($LinkType $A $B) (stv $ABs $ABc)))
+   (if (and (ContrapositionRuleGuard $LinkType) (and (< 0.999 $ABs) (< 0.999 $ABc)))
+      (($LinkType (NotLink $B) (NotLink $A)) (Truth_Contraposition (stv $ABs $ABc)))
+      ()))
 
 ; InheritanceToMemberRule
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
