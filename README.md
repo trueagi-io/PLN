@@ -5,4 +5,4 @@ Modern PLN implementation for Hyperon
 
 Please check out the Wiki:
 
-https://github.com/nartech-ai/PLN/wiki
+https://github.com/trueagi-io/PLN/wiki
