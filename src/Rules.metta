@@ -115,3 +115,7 @@
 ; Inheritance To Member Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
 (= (|- ((Inheritance $B $C) $Truth))
    ((Member $B $C) (Truth_inheritanceToMember $Truth)))
+
+; Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (|- ((Subset $A $B) $ABTruth))
+   ((Subset (Not $A) $B) (Truth_ConditionNegation (STV $A) (STV $B) $ABTruth)))
