@@ -1,7 +1,7 @@
 ;; INFERENCE RULES
 
 ;Revision
-(= (|-FoI ($T $T1) 
+(= (|- ($T $T1) 
        ($T $T2))
        ($T (Truth_Revision $T1 $T2)))
 
@@ -75,13 +75,13 @@
 
 ; negation introduction
 ; takes only one premise (is unary)
-(= (|-FoI ($x $t))
+(= (|- ($x $t))
        (if (not (== $x (NotLink $_))) ;don't derive if it is already a NotLink
            ((NotLink $x) (Truth_negationIntroduction $t)) ()))
 
 ; not elimination rule
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|-FoI ((NotLink $x) $t))
+(= (|- ((NotLink $x) $t))
        ($x (Truth_negationElimination $t)))
 
 
