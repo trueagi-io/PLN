@@ -92,3 +92,16 @@
 ; AndIntroductionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/and-introduction.scm
 (= (Truth_AndIntroduction (stv $As $Ac) (stv $Bs $Bc))
    (stv (* $As $Bs) (min $Ac $Bc)))
+
+; OrIntroductionRule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/or-introduction.scm
+(= (Truth_OrIntroduction (stv $As $Ac) (stv $Bs $Bc))
+   (stv (- (+ $As $Bs) (* $As $Bs)) (min $Ac $Bc)))
+
+; Fuzzy Conjunction Introduction Rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm
+(= (Truth_FuzzyConjunctionIntroduction (stv $As $Ac) (stv $Bs $Bc))
+   (stv (min $As $Bs) (min $Ac $Bc)))
+
+; Fuzzy Disjunction Introduction Rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm
+(= (Truth_FuzzyDisjunctionIntroduction (stv $As $Ac) (stv $Bs $Bc))
+   (stv (max $As $Bs) (min $Ac $Bc)))
+

@@ -114,6 +114,25 @@
    ((AndLink $ATerm $BTerm) (Truth_AndIntroduction $ATruth $BTruth))
 )
 
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/or-introduction.scm
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
+(= (InfHoILeftside Implication ($ATerm $ATruth) ($BTerm $BTruth))
+   ((OrLink $ATerm $BTerm) (Truth_OrIntroduction $ATruth $BTruth))
+)
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/fuzzy-conjunction-introduction.scm
+; ?   should this be on leftside or rightside?
+(= (InfHoILeftside Inheritance ($ATerm $ATruth) ($BTerm $BTruth))
+   ((AndLink $ATerm $BTerm) (Truth_FuzzyConjunctionIntroduction $ATruth $BTruth))
+)
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/propositional/fuzzy-disjunction-introduction.scm
+; ?   should this be on leftside or rightside?
+(= (InfHoILeftside Inheritance ($ATerm $ATruth) ($BTerm $BTruth))
+   ((OrLink $ATerm $BTerm) (Truth_FuzzyDisjunctionIntroduction $ATruth $BTruth))
+)
+
+
 
 ; try to apply possible higher-order rules for leftside of both premises
 (= (|-HoI (($LinkType $TermALeft $TermCommonRight) $TruthA) (($LinkType $TermBLeft $TermCommonRight) $TruthB))
