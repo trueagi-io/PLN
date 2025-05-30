@@ -109,3 +109,12 @@
 ; Inheritance To Member Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
 (= (|- ((Inheritance $B $C) $Truth))
    ((Member $B $C) (Truth_inheritanceToMember $Truth)))
+
+; transitive similarity Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
+(= (|- ((Similarity $A $B) $T1)
+       ((Similarity $B $C) $T2))
+       ((Similarity $A $C)
+        (Truth_transitiveSimilarity
+                     (STV $A)
+                     (STV $B)
+                     (STV $C) $T1 $T2)))
