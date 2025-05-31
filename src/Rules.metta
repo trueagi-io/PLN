@@ -118,3 +118,10 @@
                      (STV $A)
                      (STV $B)
                      (STV $C) $T1 $T2)))
+
+; Equivalence to Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A) (STV $B) $Truth)))
+
+(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $B $A) (Truth_equivalenceToImplication (STV $A) (STV $B) $Truth)))
