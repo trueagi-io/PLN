@@ -22,28 +22,40 @@
       ($B (Truth_SymmetricModusPonens $TruthA $TruthAB))
       (empty)))
 
-;Deduction
-(= (|- ((Inheritance $A $B) $T1)
-       ((Inheritance $B $C) $T2))
-       ((Inheritance $A $C)
+; guard to only allow inference for certain link types
+(= (SyllogisticRuleGuard Inheritance) True)
+(= (SyllogisticRuleGuard Implication) True)
+(= (SyllogisticRuleGuard Subset) True)
+
+; Deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/deduction.scm
+(= (|- (($LinkType $A $B) $T1)
+       (($LinkType $B $C) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+      (($LinkType $A $C)
         (Truth_Deduction (STV $A)
                          (STV $B)
-                         (STV $C) $T1 $T2)))
+                         (STV $C) $T1 $T2))
+      (empty)))
+      
 
-;Induction
-(= (|- ((Inheritance $C $A) $T1)
-       ((Inheritance $C $B) $T2))
-       ((Inheritance $A $B) (Truth_Induction (STV $A)
+; Induction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/induction.scm
+(= (|- (($LinkType $C $A) $T1)
+       (($LinkType $C $B) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+      (($LinkType $A $B) (Truth_Induction (STV $A)
                                              (STV $B)
-                                             (STV $C) $T1 $T2)))
-;Abduction
-(= (|- ((Inheritance $A $C) $T1)
-       ((Inheritance $B $C) $T2))
-       ((Inheritance $A $B)
+                                             (STV $C) $T1 $T2))
+      (empty)))
+
+; Abduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/abduction.scm
+(= (|- (($LinkType $A $C) $T1)
+       (($LinkType $B $C) $T2))
+   (if (SyllogisticRuleGuard $LinkType)
+      (($LinkType $A $B)
         (Truth_Abduction (STV $A)
                          (STV $B)
-                         (STV $C) $T1 $T2)))
-
+                         (STV $C) $T1 $T2))
+      (empty)))
 
 ;Usage of inheritance for predicates
 ;unary arg
