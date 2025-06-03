@@ -16,7 +16,8 @@
 (= (STV (Concept Helen))
    (stv 0.1667 0.9))
 
-!(Question (
+(= (kb)
+   (
             (Sentence ((Implication (Evaluation (Predicate friend) 
                                                 (List $1 $2))
                                     (Implication (Evaluation (Predicate smokes) 
@@ -64,12 +65,20 @@
                                    (List (Concept Anna)))
                        (stv 1.0 0.9)) (9))
 
-            ;(Sentence ((Evaluation (Predicate smokes) 
-            ;                       (List (Concept Edward)))
-            ;           (stv 1.0 0.9)) (10))
-           )
+            (Sentence ((Evaluation (Predicate smokes) 
+                                   (List (Concept Edward)))
+                       (stv 1.0 0.9)) (10))
+   )
+)
+
+
+!(setup)
+
+!(runInferenceAndStoreConclusions (kb) 3)
+
+
+!(Question 
 
            (Evaluation (Predicate cancerous)
                        (List (Concept Edward)))
-
-           3)
+           )

@@ -40,12 +40,18 @@
                (stv 0.99 0.9)) (6))
    ))
 
-!(Question (kb)
-           (Evaluation (Predicate flies)
-                       (List (Concept Pingu)))
-          2)
+!(setup)
 
-!(Question (kb)
+!(runInferenceAndStoreConclusions (kb) 2)
+
+
+!(Question
            (Evaluation (Predicate flies)
-                       (List (Concept Sam)))
-          2)
+                       (List (Concept Pingu))))
+
+!(Question
+           (Evaluation (Predicate flies)
+                       (List (Concept Sam))))
+
+
+

@@ -36,45 +36,52 @@
                (stv 0.99 0.9)) (5))
    ))
 
+
+!(setup)
+
+!(runInferenceAndStoreConclusions (kb) 1)
+
+
+
 ;negation
 
-!(Question (kb)
+!(Question
            (Not (Inheritance (Concept Sam)
                              (Concept Raven)))
-          1)
+          )
 
-!(Question (kb)
+!(Question
            (Inheritance (Concept Penguin)
                         (Concept Car))
-          1)
+          )
 
 ;Inversion
-!(Question (kb)
+!(Question
            (Inheritance (Concept Raven)
                         (Concept Sam))
-          1)
+          )
 
 
 ;Equivalence to implication
-!(Question (kb)
+!(Question
            (Implication Thunder
                         Donner)
-          1)
+          )
 
 ;And intro
-!(Question (kb)
+!(Question
            (Implication (And A B)
                         C)
-          1)
+          )
 
 ;Or intro
-!(Question (kb)
+!(Question
            (Implication (Or A B)
                         C)
-          1)
+          )
 
 ;inheritance to member link
-!(Question (kb)
+!(Question
            (Member (Concept Sam)
                    (Concept Raven))
-          1)
+          )

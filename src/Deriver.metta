@@ -29,13 +29,24 @@
                 (BestCandidate $evaluateCandidateFunction $head $tail)
                 (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
 
+; setup for atomspace
+(= (setup)
+   ; add new atomspace to store conclusions
+   (bind! &conclusions (new-space))
+)
+
+; run inference and store conclusions in atomspace
+(= (runInferenceAndStoreConclusions $kb $depth)
+   (add-reduct &conclusions (Derive $kb 1 $depth)))
+
+
 ;candidate evaluation based on confidence
 (= (ConfidenceRank ((stv $f $c) $Ev)) $c)
 (= (ConfidenceRank ()) 0)
 
-;pose a question of a certain term to the system on some knowledge base
-(= (Question $kb $term $steps)
-   (BestCandidate ConfidenceRank () (collapse (let $x (Derive $kb 1 $steps) 
+;pose a question of a certain term to the system on the conclusions
+(= (Question $term)
+   (BestCandidate ConfidenceRank () (collapse (let $x (get-atoms &conclusions)
                                                    (case (superpose $x)
                                                          (((Sentence ($T $TV) $Ev) (case (== $T $term)
                                                                                           ((True ($TV $Ev)))))))))))
