@@ -118,3 +118,8 @@
                      (STV $A)
                      (STV $B)
                      (STV $C) $T1 $T2)))
+
+; term - Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (|- ((Subset $A $B) $Truth))
+       ((Subset (Not $A) $B) (Truth_conditionNegation (STV $A) (STV $B) $Truth)))
+;       ((X Y Z) (Truth_conditionNegation (STV $A) (STV $B) $Truth)))

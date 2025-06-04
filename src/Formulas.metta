@@ -144,3 +144,15 @@
       ($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
       ($ConclC (min $ABc $BCc)))
       (stv $ConclS $ConclC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
+   (let* (
+      ($NAs (- 1.0 $As))
+      ($NSs (if (< $As 1.0)
+         (/ (- $Bs (* $Ss $As)) $NAs)
+         1.0))
+      ($NSc (if (< $As 1.0)
+         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
+         0.0)))
+      (stv $NSs $NSc)))
