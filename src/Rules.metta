@@ -30,6 +30,13 @@
                          (STV $B)
                          (STV $C) $T1 $T2)))
 
+; (axiomatic) present deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/present-deduction.scm
+(= (|- ((Inheritance $A $B) (stv $ABs $ABc))
+       ((Inheritance $B $C) (stv $BCs $BCc)))
+   (if (and (and (> $ABc 0.99999999) (> $BCc 0.99999999)) (and (> $ABs 0.99999999) (> $BCs 0.99999999)))
+       ((Inheritance $A $C) (stv 1.0 1.0))
+       (empty)))
+
 ;Induction
 (= (|- ((Inheritance $C $A) $T1)
        ((Inheritance $C $B) $T2))
