@@ -110,6 +110,10 @@
 (= (|- ((Inheritance $B $C) $Truth))
    ((Member $B $C) (Truth_inheritanceToMember $Truth)))
 
+; Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (|- ((Subset $A $B) $ABTruth))
+   ((Subset (Not $A) $B) (Truth_ConditionNegation (STV $A) (STV $B) $ABTruth)))
+
 ; transitive similarity Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
 (= (|- ((Similarity $A $B) $T1)
        ((Similarity $B $C) $T2))
@@ -125,3 +129,12 @@
 
 (= (|- ((Equivalence $A $B) $Truth))
    ((Implication $B $A) (Truth_equivalenceToImplication (STV $A) (STV $B) $Truth)))
+
+; extensional - Member deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/extensional/member-deduction.scm
+; we are using the truth of deduction here
+(= (|- ((Member $A $B) $T1)
+       ((Inheritance $B $C) $T2))
+       ((Member $A $C)
+        (Truth_Deduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)))
