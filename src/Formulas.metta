@@ -68,15 +68,12 @@
 (= (Truth_Revision (stv $f1 $c1) (stv $f2 $c2))
    (let* (($w1 (Truth_c2w $c1)) ($w2 (Truth_c2w $c2)) ($w  (+ $w1 $w2))
           ($f (/safe (+ (* $w1 $f1) (* $w2 $f2)) $w)) ($c (Truth_w2c $w)))
-          (stv (min 1.00 $f) 
+          (stv (min 1.00 $f)
                (min 1.0 (max (max $c $c1) $c2)))))
 
 ; negation, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
-(= (Truth_negationIntroduction (stv $s $c))
-   (stv (- 1.0 $s) $c))
-
 ; negation elimination, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
-(= (Truth_negationElimination (stv $s $c))
+(= (Truth_negation (stv $s $c))
    (stv (- 1.0 $s) $c))
 
 (= (Truth_inversion (stv $s $c))
@@ -110,9 +107,7 @@
           ($CinterB (* $sBC $sB))
           ($Numerator (+ $CinterA (+ $CinterB (* $CinterA (* $CinterB (* $sA (* $sB -1.0))))))) ; As per Scheme code
           ($Denominator (+ (+ $sA $sB) (* $sA (* $sB -1.0)))))
-     (if (== $Denominator 0.0) ; Avoid division by zero
-         0.0 ; Undefined STV
-         (/safe $Numerator $Denominator))))
+         (/safe $Numerator $Denominator)))
 
 ; Implication Implicant Disjunction Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
 (= (Truth_ImplicationImplicantDisjunction (stv $sA $cA) (stv $sB $cB) (stv $sC $cC) (stv $sAC $cAC) (stv $sBC $cBC))
@@ -126,42 +121,36 @@
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
 (= (Truth_ConditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
    (let* (($NAs (- 1.0 $As))
-            ($ConclS (if (< $As 1.0)
-            (/safe (- $Bs (* $Ss $As)) $NAs)
-            1.0))
+          ($ConclS (if (< $As 1.0)
+                       (/safe (- $Bs (* $Ss $As)) $NAs)
+                       1.0))
           ($ConclC (if (< $As 1.0)
-            (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
-            0.0)))
+                       (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
+                       0.0)))))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
 (= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
-   (let*
-        (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
-         ($T2 (/ (* (+ 1.0 (/ $sC $sB)) $sBC) (+ 1.0 $sBC)))
-         ($T3 (/ (* (+ 1.0 (/ $sB $sC)) $sBC) (+ 1.0 $sBC)))
-         ($T4 (/ (* (+ 1.0 (/ $sA $sB)) $sAB) (+ 1.0 $sAB))))
-        (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/ (- $sC (* $sB $T2)) (negate $sB)))))
-                      (invert (+ (* $T3 $T4) (* (negate $T3) (/ (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
+   (let* (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
+          ($T2 (/ (* (+ 1.0 (/ $sC $sB)) $sBC) (+ 1.0 $sBC)))
+          ($T3 (/ (* (+ 1.0 (/ $sB $sC)) $sBC) (+ 1.0 $sBC)))
+          ($T4 (/ (* (+ 1.0 (/ $sA $sB)) $sAB) (+ 1.0 $sAB))))
+         (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/ (- $sC (* $sB $T2)) (negate $sB)))))
+                       (invert (+ (* $T3 $T4) (* (negate $T3) (/ (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
-(= (Truth_transitiveSimilarity
-      (stv $As $Ac)
-      (stv $Bs $Bc)
-      (stv $Cs $Cc)
-      (stv $ABs $ABc)
-      (stv $BCs $BCc))
-   (let* (
-      ($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
-      ($ConclC (min $ABc $BCc)))
-
-      (stv $ConclS $ConclC)))
+(= (Truth_transitiveSimilarity (stv $As $Ac)
+                               (stv $Bs $Bc)
+                               (stv $Cs $Cc)
+                               (stv $ABs $ABc)
+                               (stv $BCs $BCc))
+   (let* (($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
+          ($ConclC (min $ABc $BCc)))
+         (stv $ConclS $ConclC)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm
 (= (simpleDeductionStrength $sA $sB $sC $sAB $sBC)
-  (if
-     (and
-        (conditional-probability-consistency $sA $sB $sAB)
-        (conditional-probability-consistency $sB $sC $sBC))
+  (if (and (conditional-probability-consistency $sA $sB $sAB)
+           (conditional-probability-consistency $sB $sC $sBC))
      ;; Preconditions are met
      (if (< 0.99 $sB)
         ;; sB tends to 1
@@ -169,33 +158,18 @@
         ;; otherwise
         (+ (* $sAB $sBC) (/safe (* (- 1.0 $sAB) (- $sC (* $sB $sBC))) (- 1.0 $sB))))
      ;; Preconditions are not met
-     0.0))
+     (empty)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
-(= (Truth_evaluationImplication
-      (stv $As $Ac)
-      (stv $Bs $Bc)
-      (stv $Cs $Cc)
-      (stv $ABs $ABc)
-      (stv $ACs $ACc))
-   (let* (
-      ($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
-      ($ConclC (*
-                  (* 0.9 0.9)
-                 (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
-      (stv $ConclS $ConclC)))
-
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
-(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
-   (let* (
-      ($NAs (- 1.0 $As))
-      ($NSs (if (< $As 1.0)
-         (/ (- $Bs (* $Ss $As)) $NAs)
-         1.0))
-      ($NSc (if (< $As 1.0)
-         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
-         0.0)))
-      (stv $NSs $NSc)))
+(= (Truth_evaluationImplication (stv $As $Ac)
+                                (stv $Bs $Bc)
+                                (stv $Cs $Cc)
+                                (stv $ABs $ABc)
+                                (stv $ACs $ACc))
+   (let* (($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
+          ($ConclC (* (* 0.9 0.9)
+                      (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
+         (stv $ConclS $ConclC)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
