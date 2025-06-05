@@ -155,3 +155,12 @@
       ($ConclC (min $ABc $BCc)))
 
       (stv $ConclS $ConclC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+    (let* (($ConclS (if (< 0.99 (* $ABs $ABc)) ; Hack to work around the lack of distributional
+                                               ; TV. If ABs is high enough, we just set $ConclS as $ABs
+                  $ABs
+                  ;; Formula based on PLN book formula for sim2inh
+                  (/ (* (+ 1.0 (/ $Bs $As)) $ABs) (+ 1.0 $ABs)))))
+        (stv $ConclS $ABc)))
