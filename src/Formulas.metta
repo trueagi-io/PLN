@@ -123,6 +123,16 @@
 (= (Truth_inheritanceToMember (stv $s $c))
    (stv $s (* $c 0.9)))
 
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (Truth_ConditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
+   (let* (($NAs (- 1.0 $As))
+            ($ConclS (if (< $As 1.0)
+            (/safe (- $Bs (* $Ss $As)) $NAs)
+            1.0))
+          ($ConclC (if (< $As 1.0)
+            (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
+            0.0)))
+
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
 (= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
    (let*
@@ -143,6 +153,7 @@
    (let* (
       ($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
       ($ConclC (min $ABc $BCc)))
+
       (stv $ConclS $ConclC)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm
@@ -173,3 +184,24 @@
                   (* 0.9 0.9)
                  (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
       (stv $ConclS $ConclC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (Truth_conditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
+   (let* (
+      ($NAs (- 1.0 $As))
+      ($NSs (if (< $As 1.0)
+         (/ (- $Bs (* $Ss $As)) $NAs)
+         1.0))
+      ($NSc (if (< $As 1.0)
+         (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
+         0.0)))
+      (stv $NSs $NSc)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
+    (let* (($ConclS (if (< 0.99 (* $ABs $ABc)) ; Hack to work around the lack of distributional
+                                               ; TV. If ABs is high enough, we just set $ConclS as $ABs
+                  $ABs
+                  ;; Formula based on PLN book formula for sim2inh
+                  (/ (* (+ 1.0 (/ $Bs $As)) $ABs) (+ 1.0 $ABs)))))
+        (stv $ConclS $ABc)))
