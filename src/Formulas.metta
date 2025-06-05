@@ -135,8 +135,8 @@
           ($T2 (/ (* (+ 1.0 (/ $sC $sB)) $sBC) (+ 1.0 $sBC)))
           ($T3 (/ (* (+ 1.0 (/ $sB $sC)) $sBC) (+ 1.0 $sBC)))
           ($T4 (/ (* (+ 1.0 (/ $sA $sB)) $sAB) (+ 1.0 $sAB))))
-         (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/ (- $sC (* $sB $T2)) (negate $sB)))))
-                       (invert (+ (* $T3 $T4) (* (negate $T3) (/ (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
+         (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/safe (- $sC (* $sB $T2)) (negate $sB)))))
+                       (invert (+ (* $T3 $T4) (* (negate $T3) (/safe (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
 (= (Truth_transitiveSimilarity (stv $As $Ac)

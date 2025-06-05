@@ -22,3 +22,7 @@
    (if (> $B 0.0)
        (/ $A $B)
        (empty)))
+
+(= (negate $arg) (- 1.0 $arg))
+
+(= (invert $arg) (/ 1.0 $arg))
