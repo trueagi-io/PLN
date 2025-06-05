@@ -135,6 +135,12 @@
                      (STV $B)
                      (STV $C) $T1 $T2)))
 
+; Evaluation Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
+(= (|- ((Evaluation $A $B) $TruthAB)
+      ((Implication $A $C) $TruthAC))
+      ((Evaluation $C $B)
+       (Truth_evaluationImplication (STV $A) (STV $B) (STV $C) $TruthAB $TruthAC)))
+
 ; term - Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
 (= (|- ((Subset $A $B) $Truth))
        ((Subset (Not $A) $B) (Truth_conditionNegation (STV $A) (STV $B) $Truth)))
