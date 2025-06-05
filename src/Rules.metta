@@ -118,3 +118,12 @@
                      (STV $A)
                      (STV $B)
                      (STV $C) $T1 $T2)))
+
+; extensional - Member deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/extensional/member-deduction.scm
+; we are using the truth of deduction here
+(= (|- ((Member $A $B) $T1)
+       ((Inheritance $B $C) $T2))
+       ((Member $A $C)
+        (Truth_Deduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)))
