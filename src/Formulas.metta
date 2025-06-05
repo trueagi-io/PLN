@@ -144,3 +144,32 @@
       ($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
       ($ConclC (min $ABc $BCc)))
       (stv $ConclS $ConclC)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm
+(= (simpleDeductionStrength $sA $sB $sC $sAB $sBC)
+  (if
+     (and
+        (conditional-probability-consistency $sA $sB $sAB)
+        (conditional-probability-consistency $sB $sC $sBC))
+     ;; Preconditions are met
+     (if (< 0.99 $sB)
+        ;; sB tends to 1
+        $sC
+        ;; otherwise
+        (+ (* $sAB $sBC) (/safe (* (- 1.0 $sAB) (- $sC (* $sB $sBC))) (- 1.0 $sB))))
+     ;; Preconditions are not met
+     0.0))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
+(= (Truth_evaluationImplication
+      (stv $As $Ac)
+      (stv $Bs $Bc)
+      (stv $Cs $Cc)
+      (stv $ABs $ABc)
+      (stv $ACs $ACc))
+   (let* (
+      ($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
+      ($ConclC (*
+                  (* 0.9 0.9)
+                 (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
+      (stv $ConclS $ConclC)))
