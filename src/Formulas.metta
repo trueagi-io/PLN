@@ -76,9 +76,10 @@
 (= (Truth_negation (stv $s $c))
    (stv (- 1.0 $s) $c))
 
-(= (Truth_inversion (stv $s $c))
+(= (Truth_inversion (stv $Bs $Bc) (stv $ABs $ABc))
+   ; confidence depends on Truth of (target) B node, which is not according to OpenCOG classic.
    ; confidence penality not according to OpenCOG classic PLN. Is weaker in this implementation.
-   (stv $s (* $c 0.6)))
+   (stv $ABs (* $Bc (* $ABc 0.6))))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))

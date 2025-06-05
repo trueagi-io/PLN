@@ -84,11 +84,11 @@
 
 ; Inheritance Inversion Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
 (= (|- ((Inheritance $A $B) $Truth))
-   ((Inheritance $B $A) (Truth_inversion $Truth)))
+   ((Inheritance $B $A) (Truth_inversion (STV $B) $Truth)))
 
 ; Implication Inversion Rule (same)
 (= (|- ((Implication $A $B) $Truth))
-   ((Implication $B $A) (Truth_inversion $Truth)))
+   ((Implication $B $A) (Truth_inversion (STV $B) $Truth)))
 
 ; equivalence to implication rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (|- ((Equivalence $A $B) $ABTruth))
