@@ -23,32 +23,26 @@
       (empty)))
 
 ;Deduction
-(= (|- ((Inheritance (Concept $A)
-                     (Concept $B)) $T1)
-       ((Inheritance (Concept $B)
-                     (Concept $C)) $T2))
-       ((Inheritance (Concept $A)
-                     (Concept $C))
-        (Truth_Deduction (STV (Concept $A))
-                         (STV (Concept $B))
-                         (STV (Concept $C)) $T1 $T2)))
+(= (|- ((Inheritance $A $B) $T1)
+       ((Inheritance $B $C) $T2))
+       ((Inheritance $A $C)
+        (Truth_Deduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)))
 
 ;Induction
-(= (|- ((Inheritance (Concept $C)
-                     (Concept $A)) $T1)
-       ((Inheritance (Concept $C)
-                     (Concept $B)) $T2))
-       ((Inheritance (Concept $A)
-                     (Concept $B)) (Truth_Induction (STV (Concept $A))
-                                                    (STV (Concept $B))
-                                                    (STV (Concept $C)) $T1 $T2)))
+(= (|- ((Inheritance $C $A) $T1)
+       ((Inheritance $C $B) $T2))
+       ((Inheritance $A $B) (Truth_Induction (STV $A)
+                                             (STV $B)
+                                             (STV $C) $T1 $T2)))
 ;Abduction
-(= (|- ((Inheritance (Concept $A) (Concept $C)) $T1)
-       ((Inheritance (Concept $B) (Concept $C)) $T2))
-       ((Inheritance (Concept $A) (Concept $B))
-        (Truth_Abduction (STV (Concept $A))
-                         (STV (Concept $B))
-                         (STV (Concept $C)) $T1 $T2)))
+(= (|- ((Inheritance $A $C) $T1)
+       ((Inheritance $B $C) $T2))
+       ((Inheritance $A $B)
+        (Truth_Abduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)))
 
 
 ;Usage of inheritance for predicates
@@ -119,3 +113,21 @@
 ; Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
 (= (|- ((Subset $A $B) $ABTruth))
    ((Subset (Not $A) $B) (Truth_ConditionNegation (STV $A) (STV $B) $ABTruth)))
+
+; transitive similarity Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
+(= (|- ((Similarity $A $B) $T1)
+       ((Similarity $B $C) $T2))
+       ((Similarity $A $C)
+        (Truth_transitiveSimilarity
+                     (STV $A)
+                     (STV $B)
+                     (STV $C) $T1 $T2)))
+
+; extensional - Member deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/extensional/member-deduction.scm
+; we are using the truth of deduction here
+(= (|- ((Member $A $B) $T1)
+       ((Inheritance $B $C) $T2))
+       ((Member $A $C)
+        (Truth_Deduction (STV $A)
+                         (STV $B)
+                         (STV $C) $T1 $T2)))

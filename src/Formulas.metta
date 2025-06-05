@@ -132,4 +132,26 @@
           ($ConclC (if (< $As 1.0)
             (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
             0.0)))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
+(= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
+   (let*
+        (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
+         ($T2 (/ (* (+ 1.0 (/ $sC $sB)) $sBC) (+ 1.0 $sBC)))
+         ($T3 (/ (* (+ 1.0 (/ $sB $sC)) $sBC) (+ 1.0 $sBC)))
+         ($T4 (/ (* (+ 1.0 (/ $sA $sB)) $sAB) (+ 1.0 $sAB))))
+        (invert (- (+ (invert (+ (* $T1 $T2) (* (negate $T1) (/ (- $sC (* $sB $T2)) (negate $sB)))))
+                      (invert (+ (* $T3 $T4) (* (negate $T3) (/ (- $sC (* $sB $T4)) (negate $sB)))))) 1.0))))
+
+; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
+(= (Truth_transitiveSimilarity
+      (stv $As $Ac)
+      (stv $Bs $Bc)
+      (stv $Cs $Cc)
+      (stv $ABs $ABc)
+      (stv $BCs $BCc))
+   (let* (
+      ($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
+      ($ConclC (min $ABc $BCc)))
+
       (stv $ConclS $ConclC)))
