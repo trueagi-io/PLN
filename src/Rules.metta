@@ -135,6 +135,10 @@
                      (STV $B)
                      (STV $C) $T1 $T2)))
 
+; term - Condition Negation Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
+(= (|- ((Subset $A $B) $Truth))
+       ((Subset (Not $A) $B) (Truth_conditionNegation (STV $A) (STV $B) $Truth)))
+
 ; Equivalence to Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
 (= (|- ((Equivalence $A $B) $Truth))
    ((Implication $A $B) (Truth_equivalenceToImplication (STV $A) (STV $B) $Truth)))
