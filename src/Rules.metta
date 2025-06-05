@@ -90,10 +90,14 @@
 (= (|- ((Implication $A $B) $Truth))
    ((Implication $B $A) (Truth_inversion (STV $B) $Truth)))
 
-; equivalence to implication rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
-(= (|- ((Equivalence $A $B) $ABTruth))
-   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A) 
-                                                        (STV $B) $ABTruth)))
+; Equivalence to Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
+(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A)
+                                                        (STV $B) $Truth)))
+
+(= (|- ((Equivalence $A $B) $Truth))
+   ((Implication $B $A) (Truth_equivalenceToImplication (STV $A)
+                                                        (STV $B) $Truth)))
 
 ; Implication Implicant Conjunction Rule, see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
 (= (|- ((Implication $A $C) $tvAC)
@@ -130,15 +134,6 @@
    ((Evaluation $C $B) (Truth_evaluationImplication (STV $A)
                                                     (STV $B)
                                                     (STV $C) $TruthAB $TruthAC)))
-
-; Equivalence to Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
-(= (|- ((Equivalence $A $B) $Truth))
-   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A)
-                                                        (STV $B) $Truth)))
-
-(= (|- ((Equivalence $A $B) $Truth))
-   ((Implication $B $A) (Truth_equivalenceToImplication (STV $A)
-                                                        (STV $B) $Truth)))
 
 ; extensional - Member deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/extensional/member-deduction.scm
 ; we are using the truth of deduction here
