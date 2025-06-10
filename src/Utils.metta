@@ -16,6 +16,7 @@
 
 (= (and5 $0 $1 $2 $3 $4) (and $0 (and $1 (and $2 (and $3 $4)))))
 
+(= (min3 $0 $1 $2) (min $0 (min $1 $2)))
 (= (min5 $0 $1 $2 $3 $4) (min $0 (min $1 (min $2 (min $3 $4)))))
 
 (= (/safe $A $B)
@@ -26,3 +27,5 @@
 (= (negate $arg) (- 1.0 $arg))
 
 (= (invert $arg) (/ 1.0 $arg))
+
+(= (abs $arg) (max $arg (- 0.0 $arg)))
