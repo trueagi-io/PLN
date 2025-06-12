@@ -122,16 +122,6 @@
 (= (Truth_inheritanceToMember (stv $s $c))
    (stv $s (* $c 0.9)))
 
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/condition-negation.scm
-(= (Truth_ConditionNegation (stv $As $Ac) (stv $Bs $Bc) (stv $Ss $Sc))
-   (let* (($NAs (- 1.0 $As))
-          ($ConclS (if (< $As 1.0)
-                       (/safe (- $Bs (* $Ss $As)) $NAs)
-                       1.0))
-          ($ConclC (if (< $As 1.0)
-                       (min (Truth_w2c (* (Truth_c2w $Ac) $NAs)) $Sc)
-                       0.0)))))
-
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
 (= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
    (let* (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
