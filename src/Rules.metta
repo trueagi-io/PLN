@@ -99,24 +99,6 @@
    ((Implication $B $A) (Truth_equivalenceToImplication (STV $A)
                                                         (STV $B) $Truth)))
 
-; Implication Implicant Conjunction Rule, see https://github.com/opencog/pln/blob/75815f9f21ad899f44eccba1921fa253a7c6216f/opencog/pln/rules/wip/implication-implicant-conjunction.scm
-(= (|- ((Implication $A $C) $tvAC)
-       ((Implication $B $C) $tvBC))
-   (if (not (== $A $B)) ; GuardCondition: A is not identical to B
-       ((Implication (And $A $B) $C)
-        (Truth_ImplicationImplicantConjunction (STV $A)
-                                               (STV $B)
-                                               (STV $C) $tvAC $tvBC)) (empty)))
-
-; Implication Implicant Disjunction Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/implication-implicant-disjunction.scm
-(= (|- ((Implication $A $C) $tvAC)
-       ((Implication $B $C) $tvBC))
-   (if (not (== $A $B)) ; GuardCondition: A is not identical to B
-       ((Implication (Or $A $B) $C)
-        (Truth_ImplicationImplicantDisjunction (STV $A)
-                                               (STV $B)
-                                               (STV $C) $tvAC $tvBC)) (empty)))
-
 ; Inheritance To Member Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
 (= (|- ((Inheritance $B $C) $Truth))
    ((Member $B $C) (Truth_inheritanceToMember $Truth)))
