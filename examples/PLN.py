@@ -22,13 +22,6 @@ def wrapnpop(func):
         return [res]
     return wrapper
 
-def func_mettamorph(evalstr):
-    bytes_literal = evalstr.encode('utf-8')
-    input_str = c_char_p(bytes_literal)
-    result = mettamorphlib.mettamorph(input_str)
-    result_str = ctypes.string_at(result).decode('utf-8')
-    return result_str
-
 def call_plninit(*a):
     global globalmetta
     mettamorphpath = os.path.expanduser("~/metta-morph")
