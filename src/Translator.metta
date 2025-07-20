@@ -22,6 +22,3 @@
                            "PLN.Init: Translated concept into function")
                    (empty))))))
 
-(= (question $x $q $d)
-   (trace! (= (RUN) (Question $x $q $d)) (empty)))
-
