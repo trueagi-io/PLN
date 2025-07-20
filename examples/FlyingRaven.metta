@@ -38,7 +38,7 @@
 
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
-                       (List (Concept Pingu)))
+                       (List (Concept Sam)))
            2)
 
 !(Question (kbdynamic)
