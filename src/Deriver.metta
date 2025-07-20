@@ -13,7 +13,7 @@
                                          ((Sentence $y $Ev2) (superpose $beliefs))
                                          ($stamp (TupleConcat $Ev1 $Ev2)))
                                         (if (StampDisjoint $Ev1 $Ev2)
-                                            (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp)))) ()))
+                                            (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
                                   (let (Sentence $z $Ev3) (superpose $beliefs)
                                         (case (|- $z) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev3))))))))
             (Derive (TupleConcat $beliefs $derivations) (+ $depth 1) $maxdepth))))
