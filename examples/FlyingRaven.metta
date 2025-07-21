@@ -1,51 +1,47 @@
-(= (STV (Concept Sam))
-   (stv 0.2 0.9))
+!(import! &self PLN)
 
-(= (STV (Concept Pingu))
-   (stv 0.2 0.9))
+(= (kbstatic)
+   ((sentence ((Concept Sam) (stv 0.2 0.9)) (0))
+    (sentence ((Concept Pingu) (stv 0.2 0.9)) (0))
+    (sentence ((Concept Penguin) (stv 0.2 0.9)) (0))
+    (sentence ((Concept Raven) (stv 0.2 0.9)) (0))
+    (sentence ((Concept Bird) (stv 0.2 0.9)) (0))))
 
-(= (STV (Concept Penguin))
-   (stv 0.2 0.9))
+;takes 30 sec to compile (no reasoning happening here just preparing a fast PLN reasoner with the concepts and implications engraved)
+!(PLN.Init (kbstatic))
 
-(= (STV (Concept Raven))
-   (stv 0.2 0.9))
-
-(= (STV (Concept Bird))
-   (stv 0.2 0.9))
-
-(= (kb)
-   (
-    (Sentence ((Inheritance (Concept Sam)
+(= (kbdynamic)
+   ((sentence ((Inheritance (Concept Sam)
                             (Concept Raven))
                (stv 0.99 0.9)) (1))
     
-    (Sentence ((Inheritance (Concept Pingu)
+    (sentence ((Inheritance (Concept Pingu)
                             (Concept Penguin))
                (stv 0.99 0.9)) (2))
     
-    (Sentence ((Evaluation (Predicate flies) 
+    (sentence ((Evaluation (Predicate flies)
                            (List (Concept Penguin)))
                (stv 0.01 0.9)) (3))
 
-    (Sentence ((Inheritance (Concept Raven)
+    (sentence ((Inheritance (Concept Raven)
                             (Concept Bird))
                (stv 0.99 0.9)) (4))
     
-    (Sentence ((Inheritance (Concept Penguin)
+    (sentence ((Inheritance (Concept Penguin)
                             (Concept Bird))
                (stv 0.99 0.9)) (5))
 
-    (Sentence ((Evaluation (Predicate flies) 
+    (sentence ((Evaluation (Predicate flies)
                            (List (Concept Bird)))
                (stv 0.99 0.9)) (6))
    ))
 
-!(Question (kb)
-           (Evaluation (Predicate flies)
-                       (List (Concept Pingu)))
-          2)
-
-!(Question (kb)
+!(Question (kbdynamic)
            (Evaluation (Predicate flies)
                        (List (Concept Sam)))
-          2)
+           2)
+
+!(Question (kbdynamic)
+           (Evaluation (Predicate flies)
+                       (List (Concept Pingu)))
+           2)
