@@ -12,7 +12,7 @@
                                                 ($LinkType3 $3 $33))) $TV))
            (trace! (= (|- (($LinkType1 $1 $11) $TV1)
                           (($LinkType2 $2 $22) $TV2))
-                      ((Evaluation $3 $33) (Truth_ModusPonens (Truth_ModusPonens $TV1 $TV2) $TV)))
+                      (($LinkType3 $3 $33) (Truth_ModusPonens (Truth_ModusPonens $TV1 $TV2) $TV)))
                       "PLN.Init: Translated nested implication into function")
            (if (maybe $X ((Concept $C) $TV))
                (trace! (= (STV (Concept $C)) $TV)
