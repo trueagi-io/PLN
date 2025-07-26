@@ -33,8 +33,7 @@
 
     (sentence ((Evaluation (Predicate flies)
                            (List (Concept Bird)))
-               (stv 0.99 0.9)) (6))
-   ))
+               (stv 0.99 0.9)) (6))))
 
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
