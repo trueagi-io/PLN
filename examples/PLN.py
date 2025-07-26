@@ -24,10 +24,11 @@ def wrapnpop(func):
 
 def call_plninit(*a):
     global globalmetta
+    plnpath = os.path.expanduser("~/PLN")
     mettamorphpath = os.path.expanduser("~/metta-morph")
     tokenizer = globalmetta.tokenizer()
-    os.system("cd .. && sh build.sh")
-    os.system("cp ../src/Translator.metta ./TRANSLATE.metta")
+    os.system(f"cd {plnpath} && sh build.sh")
+    os.system(f"cp {plnpath}/src/Translator.metta ./TRANSLATE.metta")
     with open("TRANSLATE.metta", "a") as f:
         f.write("!" + str(a[0]).replace("#",""))
     os.system("cat ../PLN.metta > TRANSLATED.metta")
