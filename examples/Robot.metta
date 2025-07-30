@@ -6,11 +6,13 @@
 
 ;2. Static KB part
 (= (kbstatic)
-   ((sentence ((Concept person) (stv 0.2 0.9)) (0))
-    (sentence ((Concept frisbee) (stv 0.2 0.9)) (0))
-    (sentence ((Concept sportsball) (stv 0.2 0.9)) (0))
-    (sentence ((Concept chair) (stv 0.2 0.9)) (0))
-    (sentence ((Concept toy) (stv 0.2 0.9)) (0))
+   ((sentence ((Concept person) (stv 0.125 0.9)) (0))
+    (sentence ((Concept frisbee) (stv 0.125 0.9)) (0))
+    (sentence ((Concept sportsball) (stv 0.125 0.9)) (0))
+    (sentence ((Concept chair) (stv 0.125 0.9)) (0))
+    (sentence ((Concept toy) (stv 0.125 0.9)) (0))
+    (sentence ((Concept round) (stv 0.125 0.9)) (0))
+    (sentence ((Concept orange) (stv 0.125 0.9)) (0))
     (sentence ((Implication (Inheritance (Concept $1)
                                          (Concept see))
                             (Implication (Inheritance (Concept $1)
@@ -26,13 +28,17 @@
    ((sentence ((Inheritance (Concept frisbee)
                             (Concept toy)) (stv 0.99 0.99)) (10))
     (sentence ((Inheritance (Concept sportsball)
-                            (Concept toy)) (stv 0.99 0.99)) (11))))
+                            (Concept toy)) (stv 0.99 0.99)) (11))
+    (sentence ((Inheritance (Concept orange)
+                            (Concept round)) (stv 0.99 0.99)) (12))
+    (sentence ((Inheritance (Concept sportsball)
+                            (Concept round)) (stv 0.99 0.99)) (13))))
 
 ;5. Categorize observation using all prior knowledge
 (= (PLNcategorizeObject $label $category)
    (Question (TupleConcat (kbdynamic)
                           ((sentence ((Inheritance (Concept $label)
-                                                   (Concept see)) (stv 0.99 0.99)) (12))))
+                                                   (Concept see)) (stv 0.99 0.99)) (99))))
              (Inheritance (Concept $label)
                           (Concept $category)) 3))
 
@@ -51,5 +57,6 @@
 ;8. Determine which of the observed/remembered objects to bring:
 !(PLNobjectsOfCategory ((detection frisbee someCoords1)
                         (detection {SELF} someCoords2)
-                        (detection person someCoords3))
+                        (detection person someCoords3)
+                        (detection orange someCoords4))
                        bring)
