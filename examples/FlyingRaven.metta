@@ -38,9 +38,9 @@
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
                        (List (Concept Sam)))
-           2)
+           10 6 12)
 
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
                        (List (Concept Pingu)))
-           2)
+           12 6 15)
