@@ -38,7 +38,7 @@
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
                        (List (Concept Sam)))
-           10 6 12)
+           2 6 9)
 
 !(Question (kbdynamic)
            (Evaluation (Predicate flies)
