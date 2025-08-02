@@ -41,7 +41,7 @@
                                                    (Concept see)) (stv 0.99 0.99)) (99))))
              (Inheritance (Concept $label)
                           (Concept $category))
-             13 7 17))
+             )) ;13 7 17)) ;uncomment for example-specific minimal resource usage
 
 ;6. Filter objects based on PLN reasoning
 (= (PLNobjectsOfCategoryHelper $objects $category)
@@ -56,8 +56,9 @@
         (unique-atom $tuple)))
 
 ;8. Determine which of the observed/remembered objects to bring:
-!(PLNobjectsOfCategory ((detection frisbee someCoords1)
-                        (detection {SELF} someCoords2)
-                        (detection person someCoords3)
-                        (detection orange someCoords4))
-                       bring)
+!(Test (PLNobjectsOfCategory ((detection frisbee someCoords1)
+                              (detection {SELF} someCoords2)
+                              (detection person someCoords3)
+                              (detection orange someCoords4))
+                             bring)
+       ((detection frisbee someCoords1) (detection orange someCoords4)))

@@ -83,3 +83,7 @@
                                                          (((Sentence ($T $TV) $Ev) (case (== $T $term)
                                                                                          ((True ($TV $Ev)))))))))))
 
+;Default usage with default resource amount for reasoning (to increase beyond what new examples demand)
+(= (Question $kb $term)
+   (Question $kb $term 20 20 200))
+

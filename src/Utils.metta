@@ -29,3 +29,6 @@
 (= (negate $arg) (- 1.0 $arg))
 
 (= (invert $arg) (/ 1.0 $arg))
+
+(= (Test $Is $Should)
+   ((Is: $Is) (Should: $Should) (Passed: (== $Is $Should))))

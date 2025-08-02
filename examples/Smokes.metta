@@ -54,6 +54,7 @@
                            (List (Concept Edward)))
                (stv 1.0 0.9)) (10))))
 
-!(Question (kbdynamic) (Evaluation (Predicate cancerous)
-                                   (List (Concept Edward)))
-                       13 5 14)
+!(Test (Question (kbdynamic) (Evaluation (Predicate cancerous)
+                                         (List (Concept Edward)))
+                             ) ;13 5 14) ;uncomment for example-specific minimal resource usage
+       ((stv 0.426 0.947368421052632) (4 9 10)))
