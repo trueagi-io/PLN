@@ -17,18 +17,22 @@
 (= (TupleCount $tuple)
    (if (== $tuple ()) 0 (+ 1 (TupleCount (cdr-atom $tuple)))))
 
-(= (and5 $0 $1 $2 $3 $4) (and $0 (and $1 (and $2 (and $3 $4)))))
+(= (and5 $0 $1 $2 $3 $4)
+   (and $0 (and $1 (and $2 (and $3 $4)))))
 
-(= (min5 $0 $1 $2 $3 $4) (min $0 (min $1 (min $2 (min $3 $4)))))
+(= (min5 $0 $1 $2 $3 $4)
+   (min $0 (min $1 (min $2 (min $3 $4)))))
 
 (= (/safe $A $B)
    (if (> $B 0.0)
        (/ $A $B)
        (empty)))
 
-(= (negate $arg) (- 1.0 $arg))
+(= (negate $arg)
+   (- 1.0 $arg))
 
-(= (invert $arg) (/ 1.0 $arg))
+(= (invert $arg)
+   (/safe 1.0 $arg))
 
 (= (Test $Is $Should)
    ((Is: $Is) (Should: $Should) (Passed: (== $Is $Should))))

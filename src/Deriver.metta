@@ -84,6 +84,9 @@
                                                                                          ((True ($TV $Ev)))))))))))
 
 ;Default usage with default resource amount for reasoning (to increase beyond what new examples demand)
+(= (Question $kb $term $steps)
+   (Question $kb $term $steps 20 200)) ;default space bound
+
 (= (Question $kb $term)
-   (Question $kb $term 20 20 200))
+   (Question $kb $term 20)) ;default steps bound
 
