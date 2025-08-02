@@ -55,5 +55,5 @@
                (stv 1.0 0.9)) (10))))
 
 !(Question (kbdynamic) (Evaluation (Predicate cancerous)
-                       (List (Concept Edward)))
-                       3)
+                                   (List (Concept Edward)))
+                       13 5 14)

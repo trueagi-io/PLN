@@ -90,10 +90,6 @@
                   (/safe (* (+ 1.0 (/safe $Bs $As)) $ABs) (+ 1.0 $ABs)))))
         (stv $ConclS $ABc)))
 
-; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inheritance-to-member.scm
-(= (Truth_inheritanceToMember (stv $s $c))
-   (stv $s (* $c 0.9)))
-
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
 (= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
    (let* (($T1 (/ (* (+ 1.0 (/ $sB $sA)) $sAB) (+ 1.0 $sAB)))
