@@ -1,5 +1,5 @@
 ;0. Helper function
-(= (TupleConcat $Ev1 $Ev2) (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
+;(= (TupleConcat $Ev1 $Ev2) (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
 
 ;1. Set up PLN reasoning context
 !(import! &self PLN)
@@ -14,9 +14,9 @@
     (sentence ((Concept round) (stv 0.125 0.9)) (0))
     (sentence ((Concept orange) (stv 0.125 0.9)) (0))
     (sentence ((Implication (Inheritance (Concept $1)
-                                         (Concept see))
+                                         (Concept toy))
                             (Implication (Inheritance (Concept $1)
-                                                      (Concept toy))
+                                                      (Concept see))
                                          (Inheritance (Concept $1)
                                                       (Concept bring)))) (stv 0.99 0.99)) (3))))
 
@@ -40,7 +40,8 @@
                           ((sentence ((Inheritance (Concept $label)
                                                    (Concept see)) (stv 0.99 0.99)) (99))))
              (Inheritance (Concept $label)
-                          (Concept $category)) 3))
+                          (Concept $category))
+             )) ;13 7 17)) ;uncomment for example-specific minimal resource usage
 
 ;6. Filter objects based on PLN reasoning
 (= (PLNobjectsOfCategoryHelper $objects $category)
@@ -55,8 +56,9 @@
         (unique-atom $tuple)))
 
 ;8. Determine which of the observed/remembered objects to bring:
-!(PLNobjectsOfCategory ((detection frisbee someCoords1)
-                        (detection {SELF} someCoords2)
-                        (detection person someCoords3)
-                        (detection orange someCoords4))
-                       bring)
+!(Test (PLNobjectsOfCategory ((detection frisbee someCoords1)
+                              (detection {SELF} someCoords2)
+                              (detection person someCoords3)
+                              (detection orange someCoords4))
+                             bring)
+       ((detection frisbee someCoords1) (detection orange someCoords4)))
