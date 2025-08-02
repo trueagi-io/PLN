@@ -1,6 +1,3 @@
-;0. Helper function
-;(= (TupleConcat $Ev1 $Ev2) (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
-
 ;1. Set up PLN reasoning context
 !(import! &self PLN)
 
