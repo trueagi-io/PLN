@@ -4,6 +4,38 @@
                            ($y (superpose $Ev2)))
                           (case (== $x $y) ((True True)))))))
 
+
+;Exclude item from tuple
+(= (Without $Tuple $a)
+   (collapse (let $x (superpose $Tuple)
+                  (if (== $x $a)
+                      (empty)
+                      $x))))
+
+;Whether a is an element of the tuple
+(= (ElementOf $a $Tuple)
+   (not (== (collapse (let $x (superpose $Tuple)
+                          (if (== $x $a)
+                              True
+                              (empty)))) ())))
+
+;Return limited-sized version of $L
+(= (LimitSize $L $size)
+   (if (< (TupleCount $L) $size)
+       $L
+       (let $lowestPriorityItem (BestCandidate PriorityRankNeg () $L)
+            (LimitSize (Without $L $lowestPriorityItem) $size))))
+
+;Fast but TODO use efficient native handling once available: https://github.com/trueagi-io/metta-morph/pull/27
+(= (Unique $L $Ret)
+   (if (== $L ())
+       $Ret
+       (let* (($x (car-atom $L))
+              ($rest (cdr-atom $L)))
+             (if (ElementOf $x $Ret)
+                 (Unique $rest $Ret)
+                 (Unique $rest (TupleConcat ($x) $Ret))))))
+
 ;; Exhaustive-until-depth deriver
 (= (Derive $beliefs $depth $maxdepth)
    (if (> $depth $maxdepth)
@@ -16,7 +48,7 @@
                                             (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
                                   (let (Sentence $z $Ev3) (superpose $beliefs)
                                        (case (|- $z) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev3))))))))
-            (Derive (TupleConcat $beliefs $derivations) (+ $depth 1) $maxdepth))))
+            (Derive (Unique (TupleConcat $beliefs $derivations) ()) (+ $depth 1) $maxdepth))))
 
 ;retrieve the best candidate
 (= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
@@ -40,3 +72,8 @@
                                                          (((Sentence ($T $TV) $Ev) (case (== $T $term)
                                                                                           ((True ($TV $Ev)))))))))))
 
+(= (Question $kb $term)
+   (Question $kb $term 10))
+
+(= (Question $kb $term $steps $x $y)
+   (Question $kb $term $steps))
