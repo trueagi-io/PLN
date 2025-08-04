@@ -54,8 +54,8 @@
                            (List (Concept Edward)))
                (stv 1.0 0.9)) (10))))
 
-!(Test (Question (kbdynamic)
-                 (Evaluation (Predicate cancerous)
-                             (List (Concept Edward)))
-                 ) ;13 5 14) ;uncomment for example-specific minimal resource usage
-       ((stv 0.426 0.947368421052632) (4 9 10)))
+!(Test (PLN.Query (kbdynamic)
+                  (Evaluation (Predicate cancerous)
+                              (List (Concept Edward)))
+                  ) ;11 2 11) ;uncomment for example-specific minimal resource usage
+       ((stv 0.519920454545454 0.829078220412911) (4 9 10)))

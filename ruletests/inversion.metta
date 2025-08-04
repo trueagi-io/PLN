@@ -9,11 +9,7 @@
    (stv 1.0 1.0))
 
 
-!(Question
-   (
-      (Sentence ((Inheritance B A) (stv 0.87 0.81)) (0))
-   )
-
-   (Inheritance A B)
-
-   1)
+!(PLN.Query ((Sentence ((Inheritance B
+                                     A) (stv 0.87 0.81)) (0)))
+            (Inheritance A
+                         B) 1)

@@ -17,8 +17,7 @@
     (sentence ((Concept opReshape) (stv 0.1 0.99)) (0))
     (sentence ((Concept opWait) (stv 0.1 0.99)) (0))
     (sentence ((Concept opUnscrew) (stv 0.1 0.99)) (0))
-
-
+    ;Implications
     ; If something is made of plastic, applying the lighter on it will make it heatedIf something is made of plastic, applying the lighter on it will make it heated
     (sentence ((Implication (Inheritance (Concept $X)
                                          (Concept madeOfPlastic))
@@ -80,8 +79,8 @@
     (sentence ((Operation (Concept X)
                           (Concept opUnscrew)) (stv 0.99 0.99)) (14))))
 
-!(Test (Question (kbdynamic)
+!(Test (PLN.Query (kbdynamic)
                   (Inheritance (Concept X) 
                                (Concept removed))
-                  ) ;6 6 12) ;uncomment for example-specific minimal resource usage
-       ((stv 0.905100467696027 0.99) (10 11 12 13 14)))
+                  ) ;10 2 12) ;uncomment for example-specific minimal resource usage
+       ((stv 0.905100467696027 0.895338254258716) (10 11 12 13 14)))

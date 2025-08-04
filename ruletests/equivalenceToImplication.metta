@@ -4,16 +4,7 @@
 (= (STV (Concept Frank))
    (stv 0.1667 0.89))
 
-!(Question (
-
-            (Sentence ((Equivalence (Concept Anna)
-                                    (Concept Frank))
-                       (stv 0.98 0.87)) (5))
-
-           )
-
+!(PLN.Query ((Sentence ((Equivalence (Concept Anna)
+                                     (Concept Frank)) (stv 0.98 0.87)) (5)))
             (Implication (Concept Anna)
-                                    (Concept Frank))
-                       
-
-           1)
+                         (Concept Frank)) 1)

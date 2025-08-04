@@ -7,55 +7,19 @@
    (stv 1.0 1.0))
 
 
-!(Question
-   (
-      (Sentence ((Not (Inheritance B A)) (stv 0.87 0.81)) (0))
-   )
-
-   (Not (Member A B))
-
-   4)
-
-
-
-
-
-
+!(PLN.Query ((Sentence ((Not (Inheritance B A)) (stv 0.87 0.81)) (0)))
+            (Not (Member A B)) 4)
 
 ; test for premises with different given truths
 
-!(Question
-   (
-      (Sentence ((Not (Inheritance B A)) (stv 0.0 0.81)) (0))
-   )
+!(PLN.Query ((Sentence ((Not (Inheritance B A)) (stv 0.0 0.81)) (0)))
+            (Not (Member A B)) 4)
 
-   (Not (Member A B))
+!(PLN.Query ((Sentence ((Not (Inheritance B A)) (stv 1.0 0.81)) (0)))
+            (Not (Member A B)) 4)
 
-   4)
+!(PLN.Query ((Sentence ((Not (Inheritance B A)) (stv 0.0 0.1)) (0)))
+            (Not (Member A B)) 4)
 
-!(Question
-   (
-      (Sentence ((Not (Inheritance B A)) (stv 1.0 0.81)) (0))
-   )
-
-   (Not (Member A B))
-
-   4)
-
-!(Question
-   (
-      (Sentence ((Not (Inheritance B A)) (stv 0.0 0.1)) (0))
-   )
-
-   (Not (Member A B))
-
-   4)
-
-!(Question
-   (
-      (Sentence ((Not (Inheritance B A)) (stv 1.0 0.1)) (0))
-   )
-
-   (Not (Member A B))
-
-   4)
+!(PLN.Query ((Sentence ((Not (Inheritance B A)) (stv 1.0 0.1)) (0)))
+            (Not (Member A B)) 4)

@@ -42,7 +42,7 @@ def call_plninit(*a):
     if len(sys.argv) > 1:
         name = sys.argv[1]
     os.system(f"cmp -s TRANSLATED.metta {mettamorphpath}/extend/{name} || cp TRANSLATED.metta {mettamorphpath}/extend/{name}")
-    os.system("rm TRANSLATE.metta TRANSLATED.metta")
+    #os.system("rm TRANSLATE.metta TRANSLATED.metta")
     cwd = os.getcwd()
     os.chdir(f'{mettamorphpath}/extend/')
     sys.path.append(os.getcwd())
