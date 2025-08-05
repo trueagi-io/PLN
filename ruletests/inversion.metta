@@ -2,18 +2,16 @@
 ;
 ; important is that it takes Truth of target (right-side of the premise) into account
 
-(= (STV A)
-   (stv 1.0 0.1))
+;1. Set up PLN reasoning context
+!(import! &self PLN)
 
-(= (STV B)
-   (stv 1.0 1.0))
+;2. Init PLN reasoner
+!(PLN.Init ((sentence (A (stv 0.5 1.0)) (0))
+            (sentence (B (stv 0.5 1.0)) (0))))
 
-
-!(Question
-   (
-      (Sentence ((Inheritance B A) (stv 0.87 0.81)) (0))
-   )
-
-   (Inheritance A B)
-
-   1)
+;3. Query PLN
+!(Test (PLN.Query ((Sentence ((Inheritance B
+                                           A) (stv 0.87 0.81)) (1)))
+                  (Inheritance A
+                               B) 1)
+       ((stv 0.87 0.486) (1)))

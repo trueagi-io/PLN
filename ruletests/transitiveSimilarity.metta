@@ -1,21 +1,17 @@
 ; manual test for transitive similarity
 
-(= (STV A)
-   (stv 0.333 1.0))
+;1. Set up PLN reasoning context
+!(import! &self PLN)
 
-(= (STV B)
-   (stv 0.333 1.0))
+;2. Init PLN reasoner
+!(PLN.Init ((sentence (A (stv 0.333 1.0)) (0))
+            (sentence (B (stv 0.333 1.0)) (0))
+            (sentence (C (stv 0.333 1.0)) (0))))
 
-(= (STV C)
-   (stv 0.333 1.0))
-
-
-!(Question
-   (
-      (Sentence ((Similarity A B) (stv 1.0 0.89)) (0))
-      (Sentence ((Similarity B C) (stv 1.0 0.5)) (1))
-   )
-
-   (Similarity A C)
-   
-   1)
+;3. Query PLN
+!(Test (PLN.Query (;A is similar to B
+                   (sentence ((Similarity A B) (stv 1.0 0.89)) (1))
+                   ;B is similar to C
+                   (sentence ((Similarity B C) (stv 1.0 0.5)) (2)))
+                  (Similarity A C))
+       ((stv 1.0 0.5) (1 2)))

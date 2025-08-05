@@ -22,6 +22,25 @@
 (= (PriorityRankNeg (Sentence ($x (stv $f $c)) $Ev1)) (- $c))
 (= (PriorityRankNeg ()) -99999.0)
 
+; InsertionSort helper: insert element x into sorted list L
+(= (InsertSorted $x $L)
+   (if (== $L ())
+       ($x)
+       (let* (($head (car-atom $L))
+              ($tail (cdr-atom $L)))
+             (if (< $x $head)
+                 (TupleConcat ($x $head) $tail)
+                 (TupleConcat ($head) (InsertSorted $x $tail))))))
+
+; InsertionSort main
+(= (InsertionSort $L $Ret)
+   (if (== $L ())
+       $Ret
+       (let* (($x (car-atom $L))
+              ($rest (cdr-atom $L))
+              ($newRet (InsertSorted $x $Ret)))
+             (InsertionSort $rest $newRet))))
+
 ;Exclude item from tuple
 (= (Without $Tuple $a)
    (collapse (let $x (superpose $Tuple)
@@ -60,11 +79,13 @@
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $activeBeliefs)
             (let $derivations
                  (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $allBeliefs))
-                                              ($stamp (TupleConcat $Ev1 $Ev2)))
+                                              ($stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())))
                                              (if (StampDisjoint $Ev1 $Ev2)
-                                                 (case (|- $x $y) ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
+                                                 (case (superpose ((|- $x $y)
+                                                                   (|- $y $x)))
+                                                       ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
-                 (trace! (SELECTED $depth (Sentence $x $Ev1))
+                 (trace! (SELECTED $depth (Sentence $x $Ev1) (DERIVED $derivations))
                          (Derive (LimitSize (Without (Unique (TupleConcat $activeBeliefs $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
                                  (LimitSize (Unique (TupleConcat $allBeliefs $derivations) ()) $beliefqueuesize)
                                  (+ $depth 1)
@@ -77,16 +98,16 @@
 (= (ConfidenceRank ()) 0)
 
 ;Pose a question of a certain term to the system on some knowledge base
-(= (Question $kb $term $steps $taskqueuesize $beliefqueuesize)
+(= (PLN.Query $kb $term $steps $taskqueuesize $beliefqueuesize)
    (BestCandidate ConfidenceRank () (collapse (let $x (Derive $kb $kb 1 $steps $taskqueuesize $beliefqueuesize)
                                                    (case (superpose $x)
                                                          (((Sentence ($T $TV) $Ev) (case (== $T $term)
                                                                                          ((True ($TV $Ev)))))))))))
 
 ;Default usage with default resource amount for reasoning (to increase beyond what new examples demand)
-(= (Question $kb $term $steps)
-   (Question $kb $term $steps 20 200)) ;default space bound
+(= (PLN.Query $kb $term $steps)
+   (PLN.Query $kb $term $steps 20 200)) ;default space bound
 
-(= (Question $kb $term)
-   (Question $kb $term 20)) ;default steps bound
+(= (PLN.Query $kb $term)
+   (PLN.Query $kb $term 20)) ;default steps bound
 

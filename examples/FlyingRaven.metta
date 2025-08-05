@@ -35,14 +35,14 @@
                            (List (Concept Bird)))
                (stv 0.99 0.9)) (6))))
 
-!(Test (Question (kbdynamic)
-                 (Evaluation (Predicate flies)
-                             (List (Concept Sam)))
-                 ) ;2 6 9) ;uncomment for example-specific minimal resource usage
-       ((stv 0.97052375 0.9) (6 1 4)))
+!(Test (PLN.Query (kbdynamic)
+                  (Evaluation (Predicate flies)
+                              (List (Concept Sam)))
+                  ) ;2 6 9) ;uncomment for example-specific minimal resource usage
+       ((stv 0.97052375 0.81) (1 4 6)))
 
-!(Test (Question (kbdynamic)
-                 (Evaluation (Predicate flies)
-                             (List (Concept Pingu)))
-                 ) ;12 6 15) ;uncomment for example-specific minimal resource usage
-       ((stv 0.5002955 0.9) (6 5 3 2)))
+!(Test (PLN.Query (kbdynamic)
+                  (Evaluation (Predicate flies)
+                              (List (Concept Pingu)))
+                  ) ;6 5 9) ;uncomment for example-specific minimal resource usage
+       ((stv 0.332225678571428 0.83690036900369) (2 3 5 6)))

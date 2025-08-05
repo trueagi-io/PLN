@@ -3,7 +3,7 @@
 ;Revision
 (= (|- ($T $T1) 
        ($T $T2))
-       ($T (Truth_Revision $T1 $T2)))
+   ($T (Truth_Revision $T1 $T2)))
 
 ;Modus Ponens
 (= (|- ($A $T1) 
@@ -56,31 +56,28 @@
 (= (|- ((Evaluation (Predicate $x)
                     (List (Concept $C))) $T1)
        ((Inheritance (Concept $S) (Concept $C)) $T2))
-       ((Evaluation (Predicate $x)
-                    (List (Concept $S))) (Truth_ModusPonens $T1 $T2)))
+   ((Evaluation (Predicate $x)
+                (List (Concept $S))) (Truth_ModusPonens $T1 $T2)))
 
 ;binary arg1
 (= (|- ((Evaluation (Predicate $x)
                     (List (Concept $C1) (Concept $C2))) $T1)
        ((Inheritance (Concept $S) (Concept $C1)) $T2))
-       ((Evaluation (Predicate $x)
-                    (List (Concept $S) (Concept $C2))) (Truth_ModusPonens $T1 $T2)))
+   ((Evaluation (Predicate $x)
+                (List (Concept $S) (Concept $C2))) (Truth_ModusPonens $T1 $T2)))
 
 ;binary arg2
 (= (|- ((Evaluation (Predicate $x)
                     (List (Concept $C1) (Concept $C2))) $T1)
        ((Inheritance (Concept $S) (Concept $C2)) $T2))
-       ((Evaluation (Predicate $x)
-                    (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
+   ((Evaluation (Predicate $x)
+                (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
 
 ; negation introduction, takes only one premise (is unary)
-(= (|- ($x $t))
-       (if (not (== $x (Not $_))) ;don't derive if it is already a NotLink
-           ((Not $x) (Truth_negation $t)) (empty)))
-
-; not elimination rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|- ((Not $x) $t))
-       ($x (Truth_negation $t)))
+; and not elimination rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
+(= (|- ($x (stv $s $c)))
+   (case $x (((Not $y) ($y (Truth_negation (stv $s $c)))) ;eliminate if it is already a Not
+             ($z ((Not $z) (Truth_negation (stv $s (* 0.5 $c)))))))) ;penalize for now
 
 ; Inheritance Inversion Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
 (= (|- ((Inheritance $A $B) $Truth))
@@ -102,9 +99,9 @@
 ; transitive similarity Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
 (= (|- ((Similarity $A $B) $T1)
        ((Similarity $B $C) $T2))
-       ((Similarity $A $C) (Truth_transitiveSimilarity (STV $A)
-                                                       (STV $B)
-                                                       (STV $C) $T1 $T2)))
+   ((Similarity $A $C) (Truth_transitiveSimilarity (STV $A)
+                                                   (STV $B)
+                                                   (STV $C) $T1 $T2)))
 
 ; Evaluation Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
 (= (|- ((Evaluation $A $B) $TruthAB)

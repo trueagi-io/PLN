@@ -45,16 +45,14 @@
 ;Modus Ponens: PLN book "5.7.1 Modus Ponens", page 111:
 (= (Truth_ModusPonens (stv $f1 $c1) (stv $f2 $c2)) 
    (stv (+ (* $f1 $f2) (* 0.02 (- 1 $f1)))
-        (min $c1 $c2)))
+        (* $c1 $c2))) ;min overestimates here as we do not have access to node probabilities
 
 ; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
 (= (Truth_SymmetricModusPonens (stv $sA $cA) (stv $sAB $cAB))
-   (let*
-      (($snotAB 0.2)
-       ($cnotAB 1.0))
-      (stv
-         (+ (* $sA $sAB) (* (* $snotAB (negate $sA)) (+ 1.0 $sAB))) 
-         (min (min $cAB $cnotAB) $cA))))
+   (let* (($snotAB 0.2)
+          ($cnotAB 1.0))
+         (stv (+ (* $sA $sAB) (* (* $snotAB (negate $sA)) (+ 1.0 $sAB)))
+              (min (min $cAB $cnotAB) $cA))))
 
 ;Revision: PLN Book "5.10.2 A Heuristic Revision Rule for Simple Truth-values", page 116:
 (: Truth_c2w (-> Number Number))
@@ -66,10 +64,13 @@
    (/safe $w (+ $w 1)))
 
 (= (Truth_Revision (stv $f1 $c1) (stv $f2 $c2))
-   (let* (($w1 (Truth_c2w $c1)) ($w2 (Truth_c2w $c2)) ($w  (+ $w1 $w2))
-          ($f (/safe (+ (* $w1 $f1) (* $w2 $f2)) $w)) ($c (Truth_w2c $w)))
-          (stv (min 1.00 $f)
-               (min 1.0 (max (max $c $c1) $c2)))))
+   (let* (($w1 (Truth_c2w $c1))
+          ($w2 (Truth_c2w $c2))
+          ($w (+ $w1 $w2))
+          ($f (/safe (+ (* $w1 $f1) (* $w2 $f2)) $w))
+          ($c (Truth_w2c $w)))
+         (stv (min 1.0 $f)
+              (min 1.0 (max (max $c $c1) $c2)))))
 
 ; negation, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
 ; negation elimination, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
@@ -85,10 +86,10 @@
 (= (Truth_equivalenceToImplication (stv $As $Ac) (stv $Bs $Bc) (stv $ABs $ABc))
     (let* (($ConclS (if (< 0.99 (* $ABs $ABc)) ; Hack to work around the lack of distributional
                                                ; TV. If ABs is high enough, we just set $ConclS as $ABs
-                  $ABs
-                  ;; Formula based on PLN book formula for sim2inh
-                  (/safe (* (+ 1.0 (/safe $Bs $As)) $ABs) (+ 1.0 $ABs)))))
-        (stv $ConclS $ABc)))
+                        $ABs
+                        ;; Formula based on PLN book formula for sim2inh
+                        (/safe (* (+ 1.0 (/safe $Bs $As)) $ABs) (+ 1.0 $ABs)))))
+          (stv $ConclS $ABc)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm#L160-L173
 (= (TransitiveSimilarityStrength $sA $sB $sC $sAB $sBC)
@@ -111,16 +112,16 @@
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm
 (= (simpleDeductionStrength $sA $sB $sC $sAB $sBC)
-  (if (and (conditional-probability-consistency $sA $sB $sAB)
-           (conditional-probability-consistency $sB $sC $sBC))
-     ;; Preconditions are met
-     (if (< 0.99 $sB)
-        ;; sB tends to 1
-        $sC
-        ;; otherwise
-        (+ (* $sAB $sBC) (/safe (* (- 1.0 $sAB) (- $sC (* $sB $sBC))) (- 1.0 $sB))))
-     ;; Preconditions are not met
-     (empty)))
+   (if (and (conditional-probability-consistency $sA $sB $sAB)
+            (conditional-probability-consistency $sB $sC $sBC))
+       ;; Preconditions are met
+       (if (< 0.99 $sB)
+           ;; sB tends to 1
+           $sC
+           ;; otherwise
+           (+ (* $sAB $sBC) (/safe (* (- 1.0 $sAB) (- $sC (* $sB $sBC))) (- 1.0 $sB))))
+       ;; Preconditions are not met
+       (empty)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
 (= (Truth_evaluationImplication (stv $As $Ac)
