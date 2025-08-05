@@ -16,4 +16,4 @@
                   ; question about evaluation of predicate
                   (Evaluation (Predicate IsFat)
                               (List (Concept D))) 4)
-       ((stv 0.8 0.6) (2 1)))
+       ((stv 0.8 0.6) (1 2)))

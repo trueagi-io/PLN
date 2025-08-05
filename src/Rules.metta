@@ -74,13 +74,10 @@
                 (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
 
 ; negation introduction, takes only one premise (is unary)
-(= (|- ($x $t))
-   (if (not (== $x (Not $_))) ;don't derive if it is already a NotLink
-       ((Not $x) (Truth_negation $t)) (empty)))
-
-; not elimination rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|- ((Not $x) $t))
-   ($x (Truth_negation $t)))
+; and not elimination rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
+(= (|- ($x (stv $s $c)))
+   (case $x (((Not $y) ($y (Truth_negation (stv $s $c)))) ;eliminate if it is already a Not
+             ($z ((Not $z) (Truth_negation (stv $s (* 0.5 $c)))))))) ;penalize for now
 
 ; Inheritance Inversion Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
 (= (|- ((Inheritance $A $B) $Truth))
