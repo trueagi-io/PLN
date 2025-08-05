@@ -37,7 +37,7 @@
                            ((sentence ((Inheritance (Concept $label)
                                                     (Concept see)) (stv 0.99 0.99)) (99))))
               (Inheritance (Concept $label)
-                           (Concept sportsball))
+                           (Concept $category))
               )) ;13 7 17)) ;uncomment for example-specific minimal resource usage
 
 ;6. Filter objects based on PLN reasoning
