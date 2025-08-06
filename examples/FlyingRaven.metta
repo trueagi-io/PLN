@@ -46,3 +46,10 @@
                               (List (Concept Pingu)))
                   ) ;6 5 9) ;uncomment for example-specific minimal resource usage
        ((stv 0.332225678571428 0.83690036900369) (2 3 5 6)))
+
+!(let* (($extendedkb (PLN.Derive ((sentence ((Inheritance (Concept Pingu)          ;what can be derived from this sentence
+                                                          (Concept Penguin))       ;considering the knowledge base
+                                             (stv 0.99 0.9)) (2))) (kbdynamic) 1)) ;and only PLN 1 inference step
+        ($originalkb (kbdynamic)))
+       (subtraction-atom $extendedkb                                               ;not considering what we already knew
+                         $originalkb))                                             ;in the original kb

@@ -73,7 +73,7 @@
                  (Unique $rest (TupleConcat ($x) $Ret))))))
 
 ;Priority-queue based task ranking deriver with belief buffer
-(= (Derive $activeBeliefs $allBeliefs $depth $maxdepth $taskqueuesize $beliefqueuesize)
+(= (PLN.Derive $activeBeliefs $allBeliefs $depth $maxdepth $taskqueuesize $beliefqueuesize)
    (if (or (> $depth $maxdepth) (== $activeBeliefs ()))
        $allBeliefs
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $activeBeliefs)
@@ -86,28 +86,43 @@
                                                        ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
                  (trace! (SELECTED $depth (Sentence $x $Ev1) (DERIVED $derivations))
-                         (Derive (LimitSize (Without (Unique (TupleConcat $activeBeliefs $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
-                                 (LimitSize (Unique (TupleConcat $allBeliefs $derivations) ()) $beliefqueuesize)
-                                 (+ $depth 1)
-                                 $maxdepth
-                                 $taskqueuesize
-                                 $beliefqueuesize))))))
+                         (PLN.Derive (LimitSize (Without (Unique (TupleConcat $activeBeliefs $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
+                                     (LimitSize (Unique (TupleConcat $allBeliefs $derivations) ()) $beliefqueuesize)
+                                     (+ $depth 1)
+                                     $maxdepth
+                                     $taskqueuesize
+                                     $beliefqueuesize))))))
+
+(= (PLN.Derive $activeBeliefs $allBeliefs $maxdepth $taskqueuesize $beliefqueuesize)
+   (PLN.Derive $activeBeliefs $allBeliefs 1 $maxdepth $taskqueuesize $beliefqueuesize))
 
 ;Candidate evaluation based on confidence
 (= (ConfidenceRank ((stv $f $c) $Ev)) $c)
 (= (ConfidenceRank ()) 0)
 
 ;Pose a question of a certain term to the system on some knowledge base
-(= (PLN.Query $kb $term $steps $taskqueuesize $beliefqueuesize)
-   (BestCandidate ConfidenceRank () (collapse (let $x (Derive $kb $kb 1 $steps $taskqueuesize $beliefqueuesize)
+(= (PLN.Query $activekb $passivekb $term $steps $taskqueuesize $beliefqueuesize)
+   (BestCandidate ConfidenceRank () (collapse (let $x (PLN.Derive $activekb $passivekb $steps $taskqueuesize $beliefqueuesize)
                                                    (case (superpose $x)
                                                          (((Sentence ($T $TV) $Ev) (case (== $T $term)
                                                                                          ((True ($TV $Ev)))))))))))
 
-;Default usage with default resource amount for reasoning (to increase beyond what new examples demand)
+(= (PLN.Query $kb $term $steps $taskqueuesize $beliefqueuesize)
+   (PLN.Query $kb $kb $term $steps $taskqueuesize $beliefqueuesize))
+
+;Default usage with default resource amount for reasoning:
+(= (PLN.DefaultSteps) 20)
+(= (PLN.DefaultTaskQueueSize) 20)
+(= (PLN.DefaultBeliefQueueSize) 200)
+
+(= (PLN.Derive $activeBeliefs $allBeliefs $maxdepth)
+   (PLN.Derive $activeBeliefs $allBeliefs $maxdepth (PLN.DefaultTaskQueueSize) (PLN.DefaultBeliefQueueSize)))
+
+(= (PLN.Derive $activeBeliefs $allBeliefs)
+   (PLN.Derive $activeBeliefs $allBeliefs (PLN.DefaultSteps)))
+
 (= (PLN.Query $kb $term $steps)
-   (PLN.Query $kb $term $steps 20 200)) ;default space bound
+   (PLN.Query $kb $term $steps (PLN.DefaultTaskQueueSize) (PLN.DefaultBeliefQueueSize))) ;default space bound
 
 (= (PLN.Query $kb $term)
-   (PLN.Query $kb $term 20)) ;default steps bound
-
+   (PLN.Query $kb $term (PLN.DefaultSteps))) ;default steps bound
