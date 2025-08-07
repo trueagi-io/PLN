@@ -110,7 +110,7 @@
 (= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize))
 
-;Default usage with default resource amount for reasoning:d
+;Default usage with default resource amount for reasoning:
 (= (PLN.Derive $Tasks $Beliefs $maxsteps)
    (PLN.Derive $Tasks $Beliefs $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize)))
 
