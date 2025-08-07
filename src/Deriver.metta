@@ -75,7 +75,7 @@
 ;Priority-queue based task ranking deriver with belief buffer
 (= (PLN.Derive $Tasks $Beliefs $steps $maxsteps $taskqueuesize $beliefqueuesize)
    (if (or (> $steps $maxsteps) (== $Tasks ()))
-       $Beliefs
+       ($Tasks $Beliefs)
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $Tasks)
             (let $derivations
                  (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs))
@@ -102,10 +102,10 @@
 
 ;Pose a question of a certain term to the system on some knowledge base
 (= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize)
-   (BestCandidate ConfidenceRank () (collapse (let $x (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
-                                                   (case (superpose $x)
-                                                         (((Sentence ($T $TV) $Ev) (case (== $T $term)
-                                                                                         ((True ($TV $Ev)))))))))))
+   (BestCandidate ConfidenceRank () (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
+                                                   (case (superpose $BeliefsRet)
+                                                         (((Sentence ($Term $TV) $Ev) (case (== $Term $term)
+                                                                                            ((True ($TV $Ev)))))))))))
 
 (= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize))
