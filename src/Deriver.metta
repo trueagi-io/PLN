@@ -72,18 +72,38 @@
                  (Unique $rest $Ret)
                  (Unique $rest (TupleConcat ($x) $Ret))))))
 
+(= (InferenceWithBeliefsSubset (Sentence $x $Ev1) $BeliefsSubset)
+   (let* (((Sentence $y $Ev2) (superpose $BeliefsSubset))
+                    ($stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())))
+                   (if (StampDisjoint $Ev1 $Ev2)
+                       (case (superpose ((|- $x $y)
+                                         (|- $y $x)))
+                             ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty))))
+
+(= (InferenceWithAllBeliefs (Sentence $x $Ev1) $Beliefs $processes)
+   (if (== $processes 1)
+       (InferenceWithBeliefsSubset (Sentence $x $Ev1) $Beliefs)
+       (if (== $processes 2)
+           (let ($B1 $B2) (SplitTuple $Beliefs)
+                (hyperpose ((InferenceWithBeliefsSubset (Sentence $x $Ev1) $B1)
+                            (InferenceWithBeliefsSubset (Sentence $x $Ev1) $B2))))
+                (if (== $processes 4)
+                    (let* ((($B1 $B2) (SplitTuple $Beliefs))
+                           (($B1a $B1b) (SplitTuple $B1))
+                           (($B2a $B2b) (SplitTuple $B2)))
+                          (hyperpose ((InferenceWithBeliefsSubset (Sentence $x $Ev1) $B1a)
+                                      (InferenceWithBeliefsSubset (Sentence $x $Ev1) $B1b)
+                                      (InferenceWithBeliefsSubset (Sentence $x $Ev1) $B2a)
+                                      (InferenceWithBeliefsSubset (Sentence $x $Ev1) $B2b))))
+                       (empty)))))
+
 ;Priority-queue based task ranking deriver with belief buffer
-(= (PLN.Derive $Tasks $Beliefs $steps $maxsteps $taskqueuesize $beliefqueuesize)
+(= (PLN.Derive $Tasks $Beliefs $steps $maxsteps $taskqueuesize $beliefqueuesize $processes)
    (if (or (> $steps $maxsteps) (== $Tasks ()))
        ($Tasks $Beliefs)
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $Tasks)
             (let $derivations
-                 (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs))
-                                              ($stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())))
-                                             (if (StampDisjoint $Ev1 $Ev2)
-                                                 (case (superpose ((|- $x $y)
-                                                                   (|- $y $x)))
-                                                       ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
+                 (collapse (superpose ((InferenceWithAllBeliefs (Sentence $x $Ev1) $Beliefs $processes)
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
                  (trace! (SELECTED $steps (Sentence $x $Ev1) (DERIVED $derivations))
                          (PLN.Derive (LimitSize (Without (Unique (TupleConcat $Tasks $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
@@ -91,31 +111,37 @@
                                      (+ $steps 1)
                                      $maxsteps
                                      $taskqueuesize
-                                     $beliefqueuesize))))))
+                                     $beliefqueuesize
+                                     $processes))))))
+
+(= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize $processes)
+   (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize $processes))
 
 (= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
-   (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize))
+   (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize (PLN.Config.Processes))) ;default amount of processes
+
+(= (PLN.Derive $Tasks $Beliefs $maxsteps)
+   (PLN.Derive $Tasks $Beliefs $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize)))
+
+(= (PLN.Derive $Tasks $Beliefs)
+   (PLN.Derive $Tasks $Beliefs (PLN.Config.MaxSteps)))
 
 ;Candidate evaluation based on confidence
 (= (ConfidenceRank ((stv $f $c) $Ev)) $c)
 (= (ConfidenceRank ()) 0)
 
 ;Pose a question of a certain term to the system on some knowledge base
-(= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize)
+(= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize $processes)
    (BestCandidate ConfidenceRank () (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
                                                    (case (superpose $BeliefsRet)
                                                          (((Sentence ($Term $TV) $Ev) (case (== $Term $term)
                                                                                             ((True ($TV $Ev)))))))))))
 
+(= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize $processes)
+   (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize $processes))
+
 (= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize)
-   (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize))
-
-;Default usage with default resource amount for reasoning:
-(= (PLN.Derive $Tasks $Beliefs $maxsteps)
-   (PLN.Derive $Tasks $Beliefs $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize)))
-
-(= (PLN.Derive $Tasks $Beliefs)
-   (PLN.Derive $Tasks $Beliefs (PLN.Config.MaxSteps)))
+   (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize (PLN.Config.Processes))) ;default amount of processes
 
 (= (PLN.Query $kb $term $maxsteps)
    (PLN.Query $kb $term $maxsteps (PLN.Config.TaskQueueSize) (PLN.Config.BeliefQueueSize))) ;default space bound

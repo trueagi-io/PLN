@@ -8,3 +8,6 @@
 
 ;Max beliefs buffer size
 (= (PLN.Config.BeliefQueueSize) 200)
+
+;Amount of processes
+(= (PLN.Config.Processes) 4)

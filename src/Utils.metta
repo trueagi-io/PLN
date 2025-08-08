@@ -36,3 +36,16 @@
 
 (= (Test $Is $Should)
    ((Is: $Is) (Should: $Should) (Passed: (== $Is $Should))))
+
+; Recursive function to split tuple into two lists using a boolean flag
+(= (SplitTupleHelper $L $list1 $list2 $flag)
+   (if (== $L ())
+       ($list1 $list2)
+       (let* (($head (car-atom $L))
+              ($tail (cdr-atom $L)))
+             (if $flag
+                 (SplitTupleHelper $tail (TupleConcat $list1 ($head)) $list2 (not $flag))
+                 (SplitTupleHelper $tail $list1 (TupleConcat $list2 ($head)) (not $flag))))))
+
+(= (SplitTuple $L)
+   (SplitTupleHelper $L () () True))
