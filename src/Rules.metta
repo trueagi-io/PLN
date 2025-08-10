@@ -1,119 +1,97 @@
 ;; INFERENCE RULES
 
 ;Revision
-(= (|- ($T $T1) 
-       ($T $T2))
-   ($T (Truth_Revision $T1 $T2)))
+(= (|- ($T $T1) ($T $T2)) ($T (Truth_Revision $T1 $T2)))
 
-;Modus Ponens
-(= (|- ($A $T1) 
-       ((Implication $A $B) $T2))
-   ($B (Truth_ModusPonens $T1 $T2)))
+;;NAL-1
+;;!Syllogistic rules for Inheritance:
+(= (|- ((Inheritance $a $b) $T1) ((Inheritance $b $c) $T2)) ((Inheritance $a $c) (Truth_Deduction $T1 $T2)))
+(= (|- ((Inheritance $a $b) $T1) ((Inheritance $a $c) $T2)) ((Inheritance $c $b) (Truth_Induction $T1 $T2)))
+(= (|- ((Inheritance $a $c) $T1) ((Inheritance $b $c) $T2)) ((Inheritance $b $a) (Truth_Abduction $T1 $T2)))
+(= (|- ((Inheritance $a $b) $T1) ((Inheritance $b $c) $T2)) ((Inheritance $c $a) (Truth_Exemplification $T1 $T2)))
 
-; guard to only allow inference for certain link types
-(= (SymmetricModusPonensRuleGuard Similarity) True)
-(= (SymmetricModusPonensRuleGuard IntentionalSimilarity) True)
-(= (SymmetricModusPonensRuleGuard ExtensionalSimilarity) True)
+;;NAL-2
+;;!Rules for Similarity:
+(= (|- ((Similarity $S $P) $T)) ((Similarity $P $S) (Truth_StructuralIntersection $T)))
+(= (|- ((Similarity $M $P) $T1) ((Similarity $S $M) $T2)) ((Similarity $S $P) (Truth_Resemblance $T1 $T2)))
+(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2)))
+(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2)))
+(= (|- ((Inheritance $M $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance $S $P) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $P $M) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P $S) (Truth_Analogy $T1 $T2)))
+;;!Dealing with properties and instances:
+(= (|- ((Inheritance $S (ExtSet $P)) $T)) ((Similarity $S (ExtSet $P)) (Truth_StructuralIntersection $T)))
+(= (|- ((Inheritance (IntSet $S) $P) $T)) ((Similarity (IntSet $S) $P) (Truth_StructuralIntersection $T)))
+(= (|- ((Inheritance (ExtSet $M) $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance (ExtSet $S) $P) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $P (IntSet $M)) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P (IntSet $S)) (Truth_Analogy $T1 $T2)))
+(= (|- ((Similarity (ExtSet $A) (ExtSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
+(= (|- ((Similarity (IntSet $A) (IntSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
 
-; SymmetricModusPonens rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
-(= (|- ($A $TruthA)
-       (($LinkType $A $B) $TruthAB))
-   (if (SymmetricModusPonensRuleGuard $LinkType)
-       ($B (Truth_SymmetricModusPonens $TruthA $TruthAB)) (empty)))
+;;NAL-3
+;;!Set decomposition:
+(= (|- ((Inheritance (ExtSet $A $B) $M) $T)) ((Inheritance (ExtSet $A) $M) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance (ExtSet $A $B) $M) $T)) ((Inheritance (ExtSet $B) $M) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance M (IntSet $A $B)) $T)) ((Inheritance M (IntSet $A)) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance M (IntSet $A $B)) $T)) ((Inheritance M (IntSet $B)) (Truth_StructuralDeduction $T)))
+;;!Extensional and intensional intersection decomposition:
+(= (|- ((Inheritance (IntInt $S $P) $M) $T)) ((Inheritance $S $M) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance $M ($S & $P)) $T)) ((Inheritance $M $S) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance (IntInt $S $P) $M) $T)) ((Inheritance $P $M) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance $M ($S & $P)) $T)) ((Inheritance $M $P) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance ($A ~ $S) $M) $T)) ((Inheritance $A $M) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance $M ($B - $S)) $T)) ((Inheritance $M $B) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance ($A ~ $S) $M) $T)) ((Inheritance $S $M) (Truth_StructuralDeductionNegated $T)))
+(= (|- ((Inheritance $M ($B - $S)) $T)) ((Inheritance $M $S) (Truth_StructuralDeductionNegated $T)))
+;;!Extensional and intensional intersection composition: (sets via reductions)
+;(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Inheritance (IntInt $P $S) $M) (Truth_Intersection $T1 $T2)))
+;(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Inheritance ($P & $S) $M) (Truth_Union $T1 $T2)))
+;(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Inheritance ($P ~ $S) $M) (Truth_Difference $T1 $T2)))
+;(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Inheritance $M ($P & $S)) (Truth_Intersection $T1 $T2)))
+;(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Inheritance $M (IntInt $P $S)) (Truth_Union $T1 $T2)))
+;(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Inheritance $M ($P - $S)) (Truth_Difference $T1 $T2)))
+;;!Extensional and intensional intersection decomposition:
+(= (|- ((Inheritance $S $M) $T1) ((Inheritance (IntInt $S $P) $M) $T2)) ((Inheritance $P $M) (Truth_DecomposePNN $T1 $T2)))
+(= (|- ((Inheritance $P $M) $T1) ((Inheritance (IntInt $S $P) $M) $T2)) ((Inheritance $S $M) (Truth_DecomposePNN $T1 $T2)))
+(= (|- ((Inheritance $S $M) $T1) ((Inheritance ($S & $P) $M) $T2)) ((Inheritance $P $M) (Truth_DecomposeNPP $T1 $T2)))
+(= (|- ((Inheritance $P $M) $T1) ((Inheritance ($S & $P) $M) $T2)) ((Inheritance $S $M) (Truth_DecomposeNPP $T1 $T2)))
+(= (|- ((Inheritance $S $M) $T1) ((Inheritance ($S ~ $P) $M) $T2)) ((Inheritance $P $M) (Truth_DecomposePNP $T1 $T2)))
+(= (|- ((Inheritance $S $M) $T1) ((Inheritance ($P ~ $S) $M) $T2)) ((Inheritance $P $M) (Truth_DecomposeNNN $T1 $T2)))
+(= (|- ((Inheritance $M $S) $T1) ((Inheritance $M ($S & $P)) $T2)) ((Inheritance $M $P) (Truth_DecomposePNN $T1 $T2)))
+(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M ($S & $P)) $T2)) ((Inheritance $M $S) (Truth_DecomposePNN $T1 $T2)))
+(= (|- ((Inheritance $M $S) $T1) ((Inheritance $M (IntInt $S $P)) $T2)) ((Inheritance $M $P) (Truth_DecomposeNPP $T1 $T2)))
+(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M (IntInt $S $P)) $T2)) ((Inheritance $M $S) (Truth_DecomposeNPP $T1 $T2)))
+(= (|- ((Inheritance $M $S) $T1) ((Inheritance $M ($S - $P)) $T2)) ((Inheritance $M $P) (Truth_DecomposePNP $T1 $T2)))
+(= (|- ((Inheritance $M $S) $T1) ((Inheritance $M ($P - $S)) $T2)) ((Inheritance $M $P) (Truth_DecomposeNNN $T1 $T2)))
 
-; guard to only allow inference for certain link types
-(= (SyllogisticRuleGuard Inheritance) True)
-(= (SyllogisticRuleGuard Implication) True)
+;; NAL-4
+;;!Transformation rules between product and image:
+(= (|- ((Inheritance ($A x $B) $R) $T)) ((Inheritance $A ($R /1 $B)) (Truth_StructuralIntersection $T)))
+(= (|- ((Inheritance ($A x $B) $R) $T)) ((Inheritance $B ($R /2 $A)) (Truth_StructuralIntersection $T)))
+(= (|- ((Inheritance $R ($A x $B)) $T)) ((Inheritance ($R \1 $B) $A) (Truth_StructuralIntersection $T)))
+(= (|- ((Inheritance $R ($A x $B)) $T)) ((Inheritance ($R \2 $A) $B) (Truth_StructuralIntersection $T)))
+;;!Optional rules for more efficient reasoning about relation components:
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance ($C x $B) $R) $T2)) ((Inheritance $C $A) (Truth_Abduction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance ($A x $C) $R) $T2)) ((Inheritance $C $B) (Truth_Abduction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $R ($C x $B)) $T2)) ((Inheritance $C $A) (Truth_Induction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $R ($A x $C)) $T2)) ((Inheritance $C $B) (Truth_Induction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance $C $A) $T2)) ((Inheritance ($C x $B) $R) (Truth_Deduction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance $A $C) $T2)) ((Inheritance ($C x $B) $R) (Truth_Induction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Similarity $C $A) $T2)) ((Inheritance ($C x $B) $R) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance $C $B) $T2)) ((Inheritance ($A x $C) $R) (Truth_Deduction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance $B $C) $T2)) ((Inheritance ($A x $C) $R) (Truth_Induction $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Similarity $C $B) $T2)) ((Inheritance ($A x $C) $R) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $A $C) $T2)) ((Inheritance $R ($C x $B)) (Truth_Deduction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $C $A) $T2)) ((Inheritance $R ($C x $B)) (Truth_Abduction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Similarity $C $A) $T2)) ((Inheritance $R ($C x $B)) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $B $C) $T2)) ((Inheritance $R ($A x $C)) (Truth_Deduction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $C $B) $T2)) ((Inheritance $R ($A x $C)) (Truth_Abduction $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Similarity $C $B) $T2)) ((Inheritance $R ($A x $C)) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance ($C x $B) $R) $T2)) ((Similarity $A $C) (Truth_Comparison $T1 $T2)))
+(= (|- ((Inheritance ($A x $B) $R) $T1) ((Inheritance ($A x $C) $R) $T2)) ((Similarity $B $C) (Truth_Comparison $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $R ($C x $B)) $T2)) ((Similarity $A $C) (Truth_Comparison $T1 $T2)))
+(= (|- ((Inheritance $R ($A x $B)) $T1) ((Inheritance $R ($A x $C)) $T2)) ((Similarity $B $C) (Truth_Comparison $T1 $T2)))
 
-; Deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/term/deduction.scm
-(= (|- (($LinkType $A $B) $T1)
-       (($LinkType $B $C) $T2))
-   (if (SyllogisticRuleGuard $LinkType)
-       (($LinkType $A $C)
-        (Truth_Deduction (STV $A)
-                         (STV $B)
-                         (STV $C) $T1 $T2)) (empty)))
-      
-
-; Induction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/induction.scm
-(= (|- (($LinkType $C $A) $T1)
-       (($LinkType $C $B) $T2))
-   (if (SyllogisticRuleGuard $LinkType)
-       (($LinkType $A $B) (Truth_Induction (STV $A)
-                                           (STV $B)
-                                           (STV $C) $T1 $T2)) (empty)))
-
-; Abduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/abduction.scm
-(= (|- (($LinkType $A $C) $T1)
-       (($LinkType $B $C) $T2))
-   (if (SyllogisticRuleGuard $LinkType)
-       (($LinkType $A $B) (Truth_Abduction (STV $A)
-                                           (STV $B)
-                                           (STV $C) $T1 $T2)) (empty)))
-
-;Usage of inheritance for predicates
-;unary arg
-(= (|- ((Evaluation (Predicate $x)
-                    (List (Concept $C))) $T1)
-       ((Inheritance (Concept $S) (Concept $C)) $T2))
-   ((Evaluation (Predicate $x)
-                (List (Concept $S))) (Truth_ModusPonens $T1 $T2)))
-
-;binary arg1
-(= (|- ((Evaluation (Predicate $x)
-                    (List (Concept $C1) (Concept $C2))) $T1)
-       ((Inheritance (Concept $S) (Concept $C1)) $T2))
-   ((Evaluation (Predicate $x)
-                (List (Concept $S) (Concept $C2))) (Truth_ModusPonens $T1 $T2)))
-
-;binary arg2
-(= (|- ((Evaluation (Predicate $x)
-                    (List (Concept $C1) (Concept $C2))) $T1)
-       ((Inheritance (Concept $S) (Concept $C2)) $T2))
-   ((Evaluation (Predicate $x)
-                (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
-
-; negation introduction, takes only one premise (is unary)
-; and not elimination rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|- ($x (stv $s $c)))
-   (case $x (((Not $y) ($y (Truth_negation (stv $s $c)))) ;eliminate if it is already a Not
-             ($z ((Not $z) (Truth_negation (stv $s (* 0.5 $c)))))))) ;penalize for now
-
-; Inheritance Inversion Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
-(= (|- ((Inheritance $A $B) $Truth))
-   ((Inheritance $B $A) (Truth_inversion (STV $B) $Truth)))
-
-; Implication Inversion Rule (same)
-(= (|- ((Implication $A $B) $Truth))
-   ((Implication $B $A) (Truth_inversion (STV $B) $Truth)))
-
-; Equivalence to Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/equivalence-to-implication.scm
-(= (|- ((Equivalence $A $B) $Truth))
-   ((Implication $A $B) (Truth_equivalenceToImplication (STV $A)
-                                                        (STV $B) $Truth)))
-
-(= (|- ((Equivalence $A $B) $Truth))
-   ((Implication $B $A) (Truth_equivalenceToImplication (STV $A)
-                                                        (STV $B) $Truth)))
-
-; transitive similarity Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/transitive-similarity.scm
-(= (|- ((Similarity $A $B) $T1)
-       ((Similarity $B $C) $T2))
-   ((Similarity $A $C) (Truth_transitiveSimilarity (STV $A)
-                                                   (STV $B)
-                                                   (STV $C) $T1 $T2)))
-
-; Evaluation Implication Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/evaluation-implication.scm
-(= (|- ((Evaluation $A $B) $TruthAB)
-       ((Implication $A $C) $TruthAC))
-   ((Evaluation $C $B) (Truth_evaluationImplication (STV $A)
-                                                    (STV $B)
-                                                    (STV $C) $TruthAB $TruthAC)))
-
-; extensional - Member deduction rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/extensional/member-deduction.scm
-; we are using the truth of deduction here
-(= (|- ((Member $A $B) $T1)
-       ((Inheritance $B $C) $T2))
-   ((Member $A $C) (Truth_Deduction (STV $A)
-                                    (STV $B)
-                                    (STV $C) $T1 $T2)))
+;;NAL-5
+;;!Negation introduction and elimination
+(= (|- ($x (stv $f $c)))
+   (case $x (((Not $y) ($y (Truth_negation (stv $f $c)))) ;eliminate if it is already a Not
+             ($z ((Not $z) (Truth_negation (stv $f (* 0.5 $c)))))))) ;penalize for now
