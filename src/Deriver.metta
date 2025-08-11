@@ -6,14 +6,14 @@
 
 ;retrieve the best candidate (PQ functionality)
 (= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
-  (if (== $tuple ())
-      $bestCandidate
-      (let* (($head (car-atom $tuple))
-             ($tail (cdr-atom $tuple)))
-            (if (> ($evaluateCandidateFunction $head)
-                   ($evaluateCandidateFunction $bestCandidate))
-                (BestCandidate $evaluateCandidateFunction $head $tail)
-                (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
+   (if (== $tuple ())
+       $bestCandidate
+       (let* (($head (car-atom $tuple))
+              ($tail (cdr-atom $tuple)))
+             (if (> ($evaluateCandidateFunction $head)
+                    ($evaluateCandidateFunction $bestCandidate))
+                 (BestCandidate $evaluateCandidateFunction $head $tail)
+                 (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
 
 ;candidate evaluation based on priority
 (= (PriorityRank (Sentence ($x (stv $f $c)) $Ev1)) $c)
