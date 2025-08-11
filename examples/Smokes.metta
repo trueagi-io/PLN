@@ -16,7 +16,8 @@
                (stv 0.4 0.9)) (1))
     (sentence ((Implication (Evaluation (Predicate smokes)
                                         (List $1))
-                            (Evaluation (Predicate cancerous) (List $1)))
+                            (Evaluation (Predicate cancerous)
+                                        (List $1)))
                (stv 0.6 0.9)) (2))))
 
 ;takes 30 sec to compile (no reasoning happening here just preparing a fast PLN reasoner with the concepts and implications engraved)
