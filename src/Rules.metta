@@ -98,5 +98,5 @@
 ;;NAL-5
 ;;!Negation introduction and elimination
 (= (|- ($x (stv $f $c)))
-   (case $x (((Not $y) ($y (Truth_negation (stv $f $c)))) ;eliminate if it is already a Not
-             ($z ((Not $z) (Truth_negation (stv $f (* 0.5 $c)))))))) ;penalize for now
+   (case $x (((Not $y) ($y (Truth_Negation (stv $f $c)))) ;eliminate if it is already a Not
+             ($z ((Not $z) (Truth_Negation (stv $f (* 0.5 $c)))))))) ;penalize for now
