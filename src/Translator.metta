@@ -1,7 +1,14 @@
+(= (sentence ((Implication ($LinkType1 $1 $11) (Not ($LinkType2 $2 $22))) $TV) $Y)
+   (if (not (== $LinkType2 Implication))
+       (trace! (= (|- (($LinkType1 $1 $11) $TV1))
+                      ((Not ($LinkType2 $2 $22)) (Truth_Deduction $TV1 $TV)))
+               "PLN.Init: Translated implication into function")
+       (empty)))
+
 (= (sentence ((Implication ($LinkType1 $1 $11) ($LinkType2 $2 $22)) $TV) $Y)
    (if (not (== $LinkType2 Implication))
        (trace! (= (|- (($LinkType1 $1 $11) $TV1))
-                  (($LinkType2 $2 $22) (Truth_Deduction $TV1 $TV)))
+                      (($LinkType2 $2 $22) (Truth_Deduction $TV1 $TV)))
                "PLN.Init: Translated implication into function")
        (empty)))
 
