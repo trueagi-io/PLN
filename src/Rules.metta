@@ -12,19 +12,19 @@
 
 ;;NAL-2
 ;;!Rules for Similarity:
-;(= (|- ((Similarity $S $P) $T)) ((Similarity $P $S) (Truth_StructuralIntersection $T)))
-;(= (|- ((Similarity $M $P) $T1) ((Similarity $S $M) $T2)) ((Similarity $S $P) (Truth_Resemblance $T1 $T2)))
-;(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2)))
-;(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2)))
-;(= (|- ((Inheritance $M $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance $S $P) (Truth_Analogy $T1 $T2)))
-;(= (|- ((Inheritance $P $M) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P $S) (Truth_Analogy $T1 $T2)))
+(= (|- ((Similarity $S $P) $T)) ((Similarity $P $S) (Truth_StructuralIntersection $T)))
+(= (|- ((Similarity $M $P) $T1) ((Similarity $S $M) $T2)) ((Similarity $S $P) (Truth_Resemblance $T1 $T2)))
+;(= (|- ((Inheritance $P $M) $T1) ((Inheritance $S $M) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2))) ;introduces similarity
+;(= (|- ((Inheritance $M $P) $T1) ((Inheritance $M $S) $T2)) ((Similarity $S $P) (Truth_Comparison $T1 $T2))) ;introduces similarity
+(= (|- ((Inheritance $M $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance $S $P) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $P $M) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P $S) (Truth_Analogy $T1 $T2)))
 ;;!Dealing with properties and instances:
-;(= (|- ((Inheritance $S (ExtSet $P)) $T)) ((Similarity $S (ExtSet $P)) (Truth_StructuralIntersection $T)))
-;(= (|- ((Inheritance (IntSet $S) $P) $T)) ((Similarity (IntSet $S) $P) (Truth_StructuralIntersection $T)))
-;(= (|- ((Inheritance (ExtSet $M) $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance (ExtSet $S) $P) (Truth_Analogy $T1 $T2)))
-;(= (|- ((Inheritance $P (IntSet $M)) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P (IntSet $S)) (Truth_Analogy $T1 $T2)))
-;(= (|- ((Similarity (ExtSet $A) (ExtSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
-;(= (|- ((Similarity (IntSet $A) (IntSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
+;(= (|- ((Inheritance $S (ExtSet $P)) $T)) ((Similarity $S (ExtSet $P)) (Truth_StructuralIntersection $T))) ;introduces similarity
+;(= (|- ((Inheritance (IntSet $S) $P) $T)) ((Similarity (IntSet $S) $P) (Truth_StructuralIntersection $T))) ;introduces similarity
+(= (|- ((Inheritance (ExtSet $M) $P) $T1) ((Similarity $S $M) $T2)) ((Inheritance (ExtSet $S) $P) (Truth_Analogy $T1 $T2)))
+(= (|- ((Inheritance $P (IntSet $M)) $T1) ((Similarity $S $M) $T2)) ((Inheritance $P (IntSet $S)) (Truth_Analogy $T1 $T2)))
+(= (|- ((Similarity (ExtSet $A) (ExtSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
+(= (|- ((Similarity (IntSet $A) (IntSet $B)))) ((Similarity $A $B) (Truth_StructuralIntersection $T)))
 
 ;;NAL-3
 ;;!Set decomposition:
