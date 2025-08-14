@@ -46,4 +46,4 @@
                   (Inheritance Edward
                               (IntSet cancerous))
                   ) ;11 2 11) ;uncomment for example-specific minimal resource usage
-       ((stv 0.576105524273516 0.503166012410978) (4 9 10)))
+       ((stv 0.666075051380597 0.531093236569029) (5 6 9 10)))
