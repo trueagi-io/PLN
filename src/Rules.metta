@@ -74,7 +74,7 @@
                 (List (Concept $C1) (Concept $S))) (Truth_ModusPonens $T1 $T2)))
 
 ; negation elimination rule (introduction now handled by Translator), see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L1-L8
-(= (|- ((Not $A) $T)) ($A (Truth_negation $T)))
+(= (|- ((Not $A) $T)) ($A (Truth_Negation $T)))
 
 ; Inheritance Inversion Rule, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/inversion.scm
 (= (|- ((Inheritance $A $B) $Truth))
