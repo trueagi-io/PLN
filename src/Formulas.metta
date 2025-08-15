@@ -100,3 +100,5 @@
 
 (= (Truth_Expectation (stv $f $c))
    (+ (* $c (- $f 0.5)) 0.5))
+
+(= (Truth_Identity $X) $X)
