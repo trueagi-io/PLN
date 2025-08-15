@@ -104,30 +104,3 @@
 (= (|- ($S $T1) ((Disjunction $S $A) $T2)) ($A (Truth_DecomposeNPP $T1 $T2)))
 (= (|- ($S $T1) ((Conjunction (Not $S) $A) $T2)) ($A (Truth_DecomposeNNN $T1 $T2)))
 (= (|- ($S $T1) ((Disjunction (Not $S) $A) $T2)) ($A (Truth_DecomposePPP $T1 $T2)))
-;!Syllogistic rules for Implication:
-(= (|- ((Implication $A $B) $T1) ((Implication $B $C) $T2)) ((Implication $A $C) (Truth_Deduction $T1 $T2)))
-(= (|- ((Implication $A $B) $T1) ((Implication $A $C) $T2)) ((Implication $C $B) (Truth_Induction $T1 $T2)))
-(= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication $B $A) (Truth_Abduction $T1 $T2)))
-;;!Conditional composition for conjunction and disjunction:
-;(= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication (Conjunction $A $B) $C) (Truth_Union $T1 $T2)))
-;(= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication (Disjunction $A $B) $C) (Truth_Intersection $T1 $T2)))
-;(= (|- ((Implication $C $A) $T1) ((Implication $C $B) $T2)) ((Implication $C (Conjunction $A $B)) (Truth_Intersection $T1 $T2)))
-;(= (|- ((Implication $C $A) $T1) ((Implication $C $B) $T2)) ((Implication $C (Disjunction $A $B)) (Truth_Union $T1 $T2)))
-;;!Multi-conditional inference:
-;(= (|- ((Implication (Conjunction $S $P) $M) $T1) ((Implication $S $M) $T2)) ($P (Truth_Abduction $T1 $T2)))
-;(= (|- ((Implication (Conjunction $C $M) $P) $T1) ((Implication $S $M) $T2)) ((Implication (Conjunction $C $S) $P) (Truth_Deduction $T1 $T2)))
-;(= (|- ((Implication (Conjunction $C $P) $M) $T1) ((Implication (Conjunction $C $S) $M) $T2)) (Implication ($S $P) (Truth_Abduction $T1 $T2)))
-;(= (|- ((Implication (Conjunction $C $M) $P) $T1) ((Implication $M $S) $T2)) ((Implication (Conjunction $C $S) $P) (Truth_Induction $T1 $T2)))
-;;!Rules for equivalence:
-(= (|- ((Equivalence $S $P) $T)) ((Equivalence $P $S) (Truth_StructuralIntersection $T)))
-(= (|- ((Implication $S $P) $T1) ((Implication $P $S) $T2)) ((Equivalence $S $P) (Truth_Intersection $T1 $T2)))
-(= (|- ((Implication $P $M) $T1) ((Implication $S $M) $T2)) ((Equivalence $S $P) (Truth_Comparison $T1 $T2)))
-(= (|- ((Implication $M $P) $T1) ((Implication $M $S) $T2)) ((Equivalence $S $P) (Truth_Comparison $T1 $T2)))
-(= (|- ((Implication $M $P) $T1) ((Equivalence $S $M) $T2)) ((Implication $S $P) (Truth_Analogy $T1 $T2)))
-(= (|- ((Implication $P $M) $T1) ((Equivalence $S $M) $T2)) ((Implication $P $S) (Truth_Analogy $T1 $T2)))
-(= (|- ((Equivalence $M $P) $T1) ((Equivalence $S $M) $T2)) ((Equivalence $S $P) (Truth_Resemblance $T1 $T2)))
-;;!Higher-order decomposition
-(= (|- ($A $T1) ((Implication $A $B) $T2)) ($B (Truth_Deduction $T1 $T2)))
-(= (|- ($A $T1) ((Implication (Conjunction $A $B) $C) $T2)) ((Implication $B $C) (Truth_Deduction $T1 $T2)))
-(= (|- ($B $T1) ((Implication $A $B) $T2)) ($A (Truth_Abduction $T1 $T2)))
-(= (|- ($A $T1) ((Equivalence $A $B) $T2)) ($B (Truth_Analogy $T1 $T2)))
