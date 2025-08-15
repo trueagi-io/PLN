@@ -7,4 +7,4 @@
 (= (PLN.Config.TaskQueueSize) 10)
 
 ;Max beliefs buffer size
-(= (PLN.Config.BeliefQueueSize) 200)
+(= (PLN.Config.BeliefQueueSize) 100)
