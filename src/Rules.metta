@@ -108,9 +108,6 @@
 (= (|- ((Implication $A $B) $T1) ((Implication $B $C) $T2)) ((Implication $A $C) (Truth_Deduction $T1 $T2)))
 (= (|- ((Implication $A $B) $T1) ((Implication $A $C) $T2)) ((Implication $C $B) (Truth_Induction $T1 $T2)))
 (= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication $B $A) (Truth_Abduction $T1 $T2)))
-(= (|- ((Conjunction $A $B) $T)) ($A (Truth_StructuralDeduction $T)))
-(= (|- ((Conjunction $A $B) $T)) ($B (Truth_StructuralDeduction $T)))
-(= (|- ((Conjunction $A $B) $T)) ((Conjunction $B $A) (Truth_StructuralIntersection $T)))
 ;;!Conditional composition for conjunction and disjunction:
 ;(= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication (Conjunction $A $B) $C) (Truth_Union $T1 $T2)))
 ;(= (|- ((Implication $A $C) $T1) ((Implication $B $C) $T2)) ((Implication (Disjunction $A $B) $C) (Truth_Intersection $T1 $T2)))
