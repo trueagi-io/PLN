@@ -30,7 +30,7 @@ def call_plninit(*a):
     os.system(f"cd {plnpath} && sh build.sh")
     os.system(f"cp {plnpath}/src/Translator.metta ./TRANSLATE.metta")
     with open("TRANSLATE.metta", "a") as f:
-        f.write("!" + str(a[0]).replace("#",""))
+        f.write("!(superpose " + str(a[0]).replace("#","")+")")
     os.system("cat ../PLN.metta > TRANSLATED.metta")
     os.system("metta TRANSLATE.metta 2>> TRANSLATED.metta")
     with open("TRANSLATED.metta", "r") as f1:

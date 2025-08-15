@@ -133,3 +133,6 @@
           ($ConclC (* (* 0.9 0.9)
                       (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
          (stv $ConclS $ConclC)))
+
+;Identity truth function
+(= (Truth_Identity $X) $X)
