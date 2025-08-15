@@ -74,7 +74,7 @@
 
 ; negation, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/negation-introduction.scm#L41
 ; negation elimination, see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/not-elimination.scm#L34
-(= (Truth_negation (stv $s $c))
+(= (Truth_Negation (stv $s $c))
    (stv (- 1.0 $s) $c))
 
 (= (Truth_inversion (stv $Bs $Bc) (stv $ABs $ABc))
@@ -133,3 +133,6 @@
           ($ConclC (* (* 0.9 0.9)
                       (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
          (stv $ConclS $ConclC)))
+
+;Identity truth function
+(= (Truth_Identity $X) $X)
