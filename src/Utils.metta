@@ -90,3 +90,13 @@
              (if (ElementOf $x $Ret)
                  (Unique $rest $Ret)
                  (Unique $rest (TupleConcat ($x) $Ret))))))
+
+;insert empty stamp since rules are not based on evidence
+(= (|-s $A $B)
+   (let ($Term $TV) (|- $A $B)
+        ($Term $TV ())))
+
+;insert empty stamp since rules are not based on evidence
+(= (|-s $A)
+   (let ($Term $TV) (|- $A)
+        ($Term $TV ())))

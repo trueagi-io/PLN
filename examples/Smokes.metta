@@ -44,6 +44,6 @@
 
 !(Test (PLN.Query (kbdynamic)
                   (Inheritance Edward
-                              (IntSet cancerous))
+                               (IntSet cancerous))
                   ) ;11 2 11) ;uncomment for example-specific minimal resource usage
        ((stv 0.6 0.550251932245783) (5 6 9 10)))

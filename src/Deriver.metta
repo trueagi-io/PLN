@@ -4,6 +4,12 @@
                            ($y (superpose $Ev2)))
                           (case (== $x $y) ((True True)))))))
 
+;Concat stamp with sorting
+(= (StampConcat $stamp $addition)
+   (if (== $addition ())
+       $stamp
+       (InsertionSort (TupleConcat $stamp $addition) ())))
+
 ;retrieve the best candidate (PQ functionality)
 (= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
    (if (== $tuple ())
@@ -37,12 +43,14 @@
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $Tasks)
             (let $derivations
                  (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs))
-                                              ($stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())))
+                                              ($stamp (StampConcat $Ev1 $Ev2)))
                                              (if (StampDisjoint $Ev1 $Ev2)
-                                                 (case (superpose ((|- $x $y)
-                                                                   (|- $y $x)))
-                                                       ((($T $TV) (Sentence ($T $TV) $stamp)))) (empty)))
-                                       (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
+                                                 (case (superpose ((|-s $x $y)
+                                                                   (|-s $y $x)))
+                                                       ((($T $TV $impstamp)
+                                                         (Sentence ($T $TV) (StampConcat $stamp $impstamp))))) (empty)))
+                                       (case (|-s $x) ((($T3 $TV3 $impstamp)
+                                                        (Sentence ($T3 $TV3) (StampConcat $Ev1 $impstamp))))))))
                  (trace! (SELECTED $steps (Sentence $x $Ev1) (DERIVED $derivations))
                          (PLN.Derive (LimitSize (Without (Unique (TupleConcat $Tasks $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
                                      (LimitSize (Unique (TupleConcat $Beliefs $derivations) ()) $beliefqueuesize)
