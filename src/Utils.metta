@@ -22,28 +22,6 @@
 (= (TupleCount $tuple)
    (if (== $tuple ()) 0 (+ 1 (TupleCount (cdr-atom $tuple)))))
 
-;Shortcut for and with 5 args
-(= (and5 $0 $1 $2 $3 $4)
-   (and $0 (and $1 (and $2 (and $3 $4)))))
-
-;Shortcut for min with 5 args
-(= (min5 $0 $1 $2 $3 $4)
-   (min $0 (min $1 (min $2 (min $3 $4)))))
-
-;Exclude division by 0
-(= (/safe $A $B)
-   (if (> $B 0.0)
-       (/ $A $B)
-       (empty)))
-
-;Negate (1 minus)
-(= (negate $arg)
-   (- 1.0 $arg))
-
-;Invert (1 over)
-(= (invert $arg)
-   (/safe 1.0 $arg))
-
 ;Test case
 (= (Test $Is $Should)
    ((Is: $Is) (Should: $Should) (Passed: (== $Is $Should))))
