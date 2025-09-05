@@ -29,8 +29,8 @@
 ;;!Set decomposition:
 (= (|- ((Inheritance (ExtSet $A $B) $M) $T)) ((Inheritance (ExtSet $A) $M) (Truth_StructuralDeduction $T)))
 (= (|- ((Inheritance (ExtSet $A $B) $M) $T)) ((Inheritance (ExtSet $B) $M) (Truth_StructuralDeduction $T)))
-(= (|- ((Inheritance M (IntSet $A $B)) $T)) ((Inheritance M (IntSet $A)) (Truth_StructuralDeduction $T)))
-(= (|- ((Inheritance M (IntSet $A $B)) $T)) ((Inheritance M (IntSet $B)) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance $M (IntSet $A $B)) $T)) ((Inheritance $M (IntSet $A)) (Truth_StructuralDeduction $T)))
+(= (|- ((Inheritance $M (IntSet $A $B)) $T)) ((Inheritance $M (IntSet $B)) (Truth_StructuralDeduction $T)))
 ;;!Extensional and intensional intersection decomposition:
 (= (|- ((Inheritance (IntInt $S $P) $M) $T)) ((Inheritance $S $M) (Truth_StructuralDeduction $T)))
 (= (|- ((Inheritance $M (ExtInt $S $P)) $T)) ((Inheritance $M $S) (Truth_StructuralDeduction $T)))
