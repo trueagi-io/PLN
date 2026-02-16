@@ -1,43 +1,37 @@
-;1. Set up PLN reasoning context
-!(import! &self PLN)
+!(import! &self (library lib_pln))
+
+(= (STV person) (stv 0.125 0.9))
+(= (STV frisbee) (stv 0.125 0.9))
+(= (STV sportsball) (stv 0.125 0.9))
+(= (STV chair) (stv 0.125 0.9))
+(= (STV toy) (stv 0.125 0.9))
+(= (STV round) (stv 0.125 0.9))
+(= (STV orange) (stv 0.125 0.9))
 
 ;2. Static KB part
-(= (kbstatic)
-   ((sentence ((Concept person) (stv 0.125 0.9)) (0))
-    (sentence ((Concept frisbee) (stv 0.125 0.9)) (0))
-    (sentence ((Concept sportsball) (stv 0.125 0.9)) (0))
-    (sentence ((Concept chair) (stv 0.125 0.9)) (0))
-    (sentence ((Concept toy) (stv 0.125 0.9)) (0))
-    (sentence ((Concept round) (stv 0.125 0.9)) (0))
-    (sentence ((Concept orange) (stv 0.125 0.9)) (0))
-    (sentence ((Implication (Inheritance (Concept $1)
-                                         (Concept toy))
-                            (Implication (Inheritance (Concept $1)
-                                                      (Concept see))
-                                         (Inheritance (Concept $1)
-                                                      (Concept bring)))) (stv 0.99 0.99)) (0))))
-
-;3. Init PLN reasoner
-!(PLN.Init (kbstatic))
-
-;4. Dynamic knowledge entries
-(= (kbdynamic)
-   ((sentence ((Inheritance (Concept frisbee)
-                            (Concept toy)) (stv 0.99 0.99)) (10))
-    (sentence ((Inheritance (Concept sportsball)
-                            (Concept toy)) (stv 0.99 0.99)) (11))
-    (sentence ((Inheritance (Concept orange)
-                            (Concept round)) (stv 0.99 0.99)) (12))
-    (sentence ((Inheritance (Concept sportsball)
-                            (Concept round)) (stv 0.99 0.99)) (13))))
+(= (kb)
+   ((Sentence ((Implication (Inheritance $1
+                                         toy)
+                            (Implication (Inheritance $1
+                                                      see)
+                                         (Inheritance $1
+                                                      bring))) (stv 0.99 0.99)) (1))
+    (Sentence ((Inheritance frisbee
+                            toy) (stv 0.99 0.99)) (2))
+    (Sentence ((Inheritance sportsball
+                            toy) (stv 0.99 0.99)) (3))
+    (Sentence ((Inheritance orange
+                            round) (stv 0.99 0.99)) (4))
+    (Sentence ((Inheritance sportsball
+                            round) (stv 0.99 0.99)) (5))))
 
 ;5. Categorize observation using all prior knowledge
 (= (PLNcategorizeObject $label $category)
-   (PLN.Query (TupleConcat (kbdynamic)
-                           ((sentence ((Inheritance (Concept $label)
-                                                    (Concept see)) (stv 0.99 0.99)) (99))))
-              (Inheritance (Concept $label)
-                           (Concept $category))
+   (PLN.Query (TupleConcat (kb)
+                           ((Sentence ((Inheritance $label
+                                                    see) (stv 0.99 0.99)) (99))))
+              (Inheritance $label
+                           $category)
               )) ;13 7 17)) ;uncomment for example-specific minimal resource usage
 
 ;6. Filter objects based on PLN reasoning
@@ -53,9 +47,10 @@
         (unique-atom $tuple)))
 
 ;8. Determine which of the observed/remembered objects to bring:
-!(Test (PLNobjectsOfCategory ((detection frisbee someCoords1)
+!(test (PLNobjectsOfCategory ((detection frisbee someCoords1)
                               (detection {SELF} someCoords2)
                               (detection person someCoords3)
                               (detection orange someCoords4))
                              bring)
        ((detection frisbee someCoords1) (detection orange someCoords4)))
+

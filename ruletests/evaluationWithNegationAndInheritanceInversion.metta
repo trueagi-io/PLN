@@ -1,12 +1,12 @@
+!(translatePredicate (retractall (Predicate (fun Predicate))))
+!(import! &self (library lib_pln))
+
 ;1. Set up PLN reasoning context
-!(import! &self PLN)
+(= (STV (Concept X)) (stv 0.5 1.0))
+(= (STV (Concept D)) (stv 0.5 1.0))
 
-;2. Init PLN reasoner
-!(PLN.Init ((sentence ((Concept X) (stv 0.5 1.0)) (0))
-            (sentence ((Concept D) (stv 0.5 1.0)) (0))))
-
-;3. Query PLN
-!(Test (PLN.Query (; for now just for application of rule ";Usage of inheritance for predicates"
+;2. Query PLN
+!(test (PLN.Query (; for now just for application of rule ";Usage of inheritance for predicates"
                    (Sentence ((Evaluation (Predicate IsFat)
                                           (List (Concept X))) (stv 1.0 1.0)) (1))
                    (Sentence ((Not (Inheritance (Concept X)
