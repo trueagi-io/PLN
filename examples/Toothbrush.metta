@@ -1,86 +1,77 @@
-!(import! &self PLN)
+!(import! &self (library lib_pln))
 
-(= (kbstatic)
-   (;Considered instance
-    (sentence ((Concept X) (stv 0.1 0.99)) (0))
-    ;Materials
-    (sentence ((Concept madeOfPlastic) (stv 0.1 0.99)) (0))
-    ;Object properties
-    (sentence ((Concept heated) (stv 0.1 0.99)) (0))
-    (sentence ((Concept melted) (stv 0.1 0.99)) (0))
-    (sentence ((Concept pliable) (stv 0.1 0.99)) (0))
-    (sentence ((Concept screwlike) (stv 0.1 0.99)) (0))
-    (sentence ((Concept hardened) (stv 0.1 0.99)) (0))
-    (sentence ((Concept removed) (stv 0.1 0.99)) (0))
-    ;Ops
-    (sentence ((Concept opLighter) (stv 0.1 0.99)) (0))
-    (sentence ((Concept opReshape) (stv 0.1 0.99)) (0))
-    (sentence ((Concept opWait) (stv 0.1 0.99)) (0))
-    (sentence ((Concept opUnscrew) (stv 0.1 0.99)) (0))
-    ;Implications
+(= (STV X) (stv 0.1 0.99))
+(= (STV madeOfPlastic) (stv 0.1 0.99))
+(= (STV heated) (stv 0.1 0.99))
+(= (STV melted) (stv 0.1 0.99))
+(= (STV pliable) (stv 0.1 0.99))
+(= (STV screwlike) (stv 0.1 0.99))
+(= (STV hardened) (stv 0.1 0.99))
+(= (STV removed) (stv 0.1 0.99))
+(= (STV opLighter) (stv 0.1 0.99))
+(= (STV opReshape) (stv 0.1 0.99))
+(= (STV opWait) (stv 0.1 0.99))
+(= (STV opUnscrew) (stv 0.1 0.99))
+
+(= (kb)
+   (;Implications
     ; If something is made of plastic, applying the lighter on it will make it heatedIf something is made of plastic, applying the lighter on it will make it heated
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept madeOfPlastic))
-                            (Implication (Operation   (Concept $X)
-                                                      (Concept opLighter))
-                                         (Inheritance (Concept $X)
-                                                      (Concept heated)))) (stv 0.99 0.99)) (2))
+    (Sentence ((Implication (Inheritance $X
+                                         madeOfPlastic)
+                            (Implication (Operation   $X
+                                                      opLighter)
+                                         (Inheritance $X
+                                                      heated))) (stv 0.99 0.99)) (2))
 
     ; If it's heated it will be melted
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept heated))
-                            (Inheritance (Concept $X)
-                                         (Concept melted))) (stv 0.99 0.99)) (3))
+    (Sentence ((Implication (Inheritance $X
+                                         heated)
+                            (Inheritance $X
+                                         melted)) (stv 0.99 0.99)) (3))
 
     ; If it's melted it will be pliable
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept melted))
-                            (Inheritance (Concept $X)
-                                         (Concept pliable))) (stv 0.99 0.99)) (4))
+    (Sentence ((Implication (Inheritance $X
+                                         melted)
+                            (Inheritance $X
+                                         pliable)) (stv 0.99 0.99)) (4))
 
     ; If it's pliable and reshape is applied, it will be screwlike
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept pliable))
-                            (Implication (Operation   (Concept $X)
-                                                      (Concept opReshape))
-                                         (Inheritance (Concept $X)
-                                                      (Concept screwlike)))) (stv 0.99 0.99)) (5))
+    (Sentence ((Implication (Inheritance $X
+                                         pliable)
+                            (Implication (Operation   $X
+                                                      opReshape)
+                                         (Inheritance $X
+                                                      screwlike))) (stv 0.99 0.99)) (5))
 
     ; If it's screwlike and we opWait, it will be hardened
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept screwlike))
-                            (Implication (Operation   (Concept $X)
-                                                      (Concept opWait))
-                                         (Inheritance (Concept $X)
-                                                      (Concept hardened)))) (stv 0.99 0.99)) (6))
+    (Sentence ((Implication (Inheritance $X
+                                         screwlike)
+                            (Implication (Operation   $X
+                                                      opWait)
+                                         (Inheritance $X
+                                                      hardened))) (stv 0.99 0.99)) (6))
 
      ; If it's hardened, we can use it for opUnscrewing to remove the screw
-    (sentence ((Implication (Inheritance (Concept $X)
-                                         (Concept hardened))
-                            (Implication (Operation   (Concept $X)
-                                                      (Concept opUnscrew))
-                                         (Inheritance (Concept $X)
-                                                      (Concept removed)))) (stv 0.99 0.99)) (7))))
-
-;takes 30 sec to compile (no reasoning happening here just preparing a fast PLN reasoner with the concepts and implications engraved)
-!(PLN.Init (kbstatic))
-
-(= (kbdynamic)
-   (; X is made of plastic
-    (sentence ((Inheritance (Concept X)
-                            (Concept madeOfPlastic)) (stv 0.99 0.99)) (10))
+    (Sentence ((Implication (Inheritance $X
+                                         hardened)
+                            (Implication (Operation   $X
+                                                      opUnscrew)
+                                         (Inheritance $X
+                                                      removed))) (stv 0.99 0.99)) (7))
+    (Sentence ((Inheritance X
+                            madeOfPlastic) (stv 0.99 0.99)) (10))
     ; We apply the lighter to it
-    (sentence ((Operation (Concept X)
-                          (Concept opLighter)) (stv 0.99 0.99)) (11))
-    (sentence ((Operation (Concept X)
-                          (Concept opReshape)) (stv 0.99 0.99)) (12))
-    (sentence ((Operation (Concept X)
-                          (Concept opWait)) (stv 0.99 0.99)) (13))    
-    (sentence ((Operation (Concept X)
-                          (Concept opUnscrew)) (stv 0.99 0.99)) (14))))
+    (Sentence ((Operation X
+                          opLighter) (stv 0.99 0.99)) (11))
+    (Sentence ((Operation X
+                          opReshape) (stv 0.99 0.99)) (12))
+    (Sentence ((Operation X
+                          opWait) (stv 0.99 0.99)) (13))    
+    (Sentence ((Operation X
+                          opUnscrew) (stv 0.99 0.99)) (14))))
 
-!(Test (PLN.Query (kbdynamic)
-                  (Inheritance (Concept X) 
-                               (Concept removed))
+!(test (PLN.Query (kb)
+                  (Inheritance X
+                               removed)
                   ) ;10 2 12) ;uncomment for example-specific minimal resource usage
-       ((stv 0.905100467696027 0.895338254258716) (10 11 12 13 14)))
+       ((stv 0.9013534742103302 0.8953382542587163) (2 3 4 5 6 7 10 11 12 13 14)))

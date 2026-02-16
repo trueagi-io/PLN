@@ -1,55 +1,45 @@
-!(import! &self PLN)
+!(import! &self (library lib_pln))
 
-(= (kbstatic)
-   ((sentence ((Concept Sam) (stv 0.2 0.9)) (0))
-    (sentence ((Concept Pingu) (stv 0.2 0.9)) (0))
-    (sentence ((Concept Penguin) (stv 0.2 0.9)) (0))
-    (sentence ((Concept Raven) (stv 0.2 0.9)) (0))
-    (sentence ((Concept Bird) (stv 0.2 0.9)) (0))))
+(= (STV Sam) (stv 0.16 0.9))
+(= (STV Pingu) (stv 0.16 0.9))
+(= (STV Penguin) (stv 0.16 0.9))
+(= (STV Raven) (stv 0.16 0.9))
+(= (STV Bird) (stv 0.16 0.9))
+(= (STV (IntSet flies)) (stv 0.16 0.9))
 
-;takes 30 sec to compile (no reasoning happening here just preparing a fast PLN reasoner with the concepts and implications engraved)
-!(PLN.Init (kbstatic))
-
-(= (kbdynamic)
-   ((sentence ((Inheritance (Concept Sam)
-                            (Concept Raven))
+(= (kb)
+   ((Sentence ((Inheritance Sam
+                            Raven)
                (stv 0.99 0.9)) (1))
     
-    (sentence ((Inheritance (Concept Pingu)
-                            (Concept Penguin))
+    (Sentence ((Inheritance Pingu
+                            Penguin)
                (stv 0.99 0.9)) (2))
     
-    (sentence ((Evaluation (Predicate flies)
-                           (List (Concept Penguin)))
+    (Sentence ((Inheritance Penguin
+                            (IntSet flies))
                (stv 0.01 0.9)) (3))
 
-    (sentence ((Inheritance (Concept Raven)
-                            (Concept Bird))
+    (Sentence ((Inheritance Raven
+                            Bird)
                (stv 0.99 0.9)) (4))
     
-    (sentence ((Inheritance (Concept Penguin)
-                            (Concept Bird))
+    (Sentence ((Inheritance Penguin
+                            Bird)
                (stv 0.99 0.9)) (5))
 
-    (sentence ((Evaluation (Predicate flies)
-                           (List (Concept Bird)))
+    (Sentence ((Inheritance Bird
+                            (IntSet flies))
                (stv 0.99 0.9)) (6))))
 
-!(Test (PLN.Query (kbdynamic)
-                  (Evaluation (Predicate flies)
-                              (List (Concept Sam)))
-                  ) ;2 6 9) ;uncomment for example-specific minimal resource usage
-       ((stv 0.97052375 0.81) (1 4 6)))
+!(test (PLN.Query (kb)
+                  (Inheritance Sam
+                               (IntSet flies)))
+       ((stv 0.9703557256235827 0.9) (1 4 6)))
 
-!(Test (PLN.Query (kbdynamic)
-                  (Evaluation (Predicate flies)
-                              (List (Concept Pingu)))
-                  ) ;6 5 9) ;uncomment for example-specific minimal resource usage
-       ((stv 0.332225678571428 0.83690036900369) (2 3 5 6)))
 
-!(let* ((($Tasks $extendedkb) (PLN.Derive ((sentence ((Inheritance (Concept Pingu)          ;what can be derived from this sentence
-                                                                   (Concept Penguin))       ;considering the knowledge base
-                                                      (stv 0.99 0.9)) (2))) (kbdynamic) 1)) ;and only PLN 1 inference step
-        ($originalkb (kbdynamic)))
-       (subtraction-atom $extendedkb                                               ;not considering what we already knew
-                         $originalkb))                                             ;in the original kb
+!(test (PLN.Query (kb)
+                  (Inheritance Pingu
+                               (IntSet flies)))
+       ((stv 0.011785714285714288 0.9) (2 3)))
+

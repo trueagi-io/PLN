@@ -1,8 +1,0 @@
-echo "FlyingRaven.metta:"
-metta FlyingRaven.metta | grep "Passed:"
-echo "\nRobot.metta:"
-metta Robot.metta | grep "Passed:"
-echo "\nSmokes.metta:"
-metta Smokes.metta | grep "Passed:"
-echo "\nToothbrush.metta:"
-metta Toothbrush.metta | grep "Passed:"

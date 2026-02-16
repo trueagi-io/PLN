@@ -2,16 +2,15 @@
 ; makes use of Inheritance To Member Rule
 ; makes use of Revision Rule
 
+!(import! &self (library lib_pln))
+
 ;1. Set up PLN reasoning context
-!(import! &self PLN)
+(= (STV (Concept Tom)) (stv 0.333 1.0))
+(= (STV (Concept SpeciesA)) (stv 0.333 1.0))
+(= (STV (Concept SpeciesCats)) (stv 0.333 1.0))
 
-;2. Init PLN reasoner
-!(PLN.Init ((sentence ((Concept Tom) (stv 0.333 1.0)) (0))
-            (sentence ((Concept SpeciesA) (stv 0.333 1.0)) (0))
-            (sentence ((Concept SpeciesCats) (stv 0.33 1.0)) (0))))
-
-;3. Query PLN
-!(Test (PLN.Query (; Tom is a member of SpeciesA
+;2. Query PLN
+!(test (PLN.Query (; Tom is a member of SpeciesA
                    ; premise for Member deduction Rule
                    (Sentence ((Member (Concept Tom)
                                       (Concept SpeciesA)) (stv 1.0 1.0)) (1))
