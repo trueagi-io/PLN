@@ -1,4 +1,6 @@
-!(import! &self (library lib_pln))
+!(import! &self (library lib_import))
+!(git-import! "https://github.com/trueagi-io/PLN.git")
+!(import! &self (library PLN lib_pln))
 
 (= (STV X) (stv 0.1 0.99))
 (= (STV madeOfPlastic) (stv 0.1 0.99))

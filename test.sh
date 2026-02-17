@@ -1,9 +1,11 @@
 #!/bin/sh
+echo "script is: $0"
+cd ../../
 
 run_test() {
     f="$1"
     echo "Running $f"
-    output=$(sh ../../run.sh "$f" | grep "is " | grep " should ")
+    output=$(sh run.sh "$f" | grep "is " | grep " should ")
     echo "$output" | grep -q "❌"
     fail=$?
     echo "$output" | grep -q "✅"
@@ -23,7 +25,7 @@ pids=""
 pidfile="/tmp/metta_pid_map.$$"
 : > "$pidfile"
 
-for f in ./*/*.metta; do
+for f in ./repos/PLN/*/*.metta; do
     base=$(basename "$f")
     case "$base" in repl.metta|llm_cities.metta|torch.metta|greedy_chess.metta|git_import2.metta)
         continue ;;
