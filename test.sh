@@ -1,6 +1,5 @@
 #!/bin/sh
 echo "script is: $0"
-cd ../../
 
 run_test() {
     f="$1"
