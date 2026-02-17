@@ -1,4 +1,6 @@
-!(import! &self (library lib_pln))
+!(import! &self (library lib_import))
+!(git-import! "https://github.com/trueagi-io/PLN.git")
+!(import! &self (library PLN lib_pln))
 
 ;1. Set up PLN reasoning context
 (= (STV Thunder) (stv 0.142 1.0))
