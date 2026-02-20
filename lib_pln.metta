@@ -84,6 +84,19 @@
 ;                 (Unique $rest $Ret)
 ;                 (Unique $rest (TupleConcat ($x) $Ret))))))
 
+;;Incremental tuple dedup helpers.
+(= (PushUnique $L $x)
+   (if (ElementOf $x $L)
+       $L
+       (TupleConcat $L ($x))))
+
+(= (ConcatUnique $base $items)
+   (if (== $items ())
+       $base
+       (let* (($head (car-atom $items))
+              ($tail (cdr-atom $items)))
+             (ConcatUnique (PushUnique $base $head) $tail))))
+
 ;; Consistency Conditions: PLN book "5.2.2.2 PLN Deduction and Second-Order Probability", page 74:
 
 ; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
@@ -377,9 +390,13 @@
 
 ;;Whether evidence was just counted once
 (= (StampDisjoint $Ev1 $Ev2)
-   (== () (collapse (let* (($x (superpose $Ev1))
-                           ($y (superpose $Ev2)))
-                          (case (== $x $y) ((True True)))))))
+   (if (== $Ev1 ())
+       True
+       (let* (($x (car-atom $Ev1))
+              ($rest (cdr-atom $Ev1)))
+             (if (ElementOf $x $Ev2)
+                 False
+                 (StampDisjoint $rest $Ev2)))))
 
 ;;Concat stamp with sorting
 (= (StampConcat $stamp $addition)
@@ -419,21 +436,21 @@
        ($Tasks $Beliefs)
        (let (Sentence $x $Ev1) (BestCandidate PriorityRank () $Tasks)
             (let $derivations
-                 (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs))
-                                              ($stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())))
+                 (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs)))
                                              (if (StampDisjoint $Ev1 $Ev2)
-                                                 (case (superpose ((|- $x $y)
-                                                                   (|- $y $x)))
-                                                       ((($T $TV) (Sentence ($T $TV) $stamp))))
+                                                 (let $stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())
+                                                      (superpose ((case (|- $x $y)
+                                                                    ((($Txy $TVxy) (Sentence ($Txy $TVxy) $stamp))))
+                                                                  (case (|- $y $x)
+                                                                    ((($Tyx $TVyx) (Sentence ($Tyx $TVyx) $stamp)))))))
                                                  (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
-                 (let $temp (trace! (SELECTED $steps (Sentence $x $Ev1)) 42)
-                            (PLN.Derive (LimitSize (Without (Unique (TupleConcat $Tasks $derivations) ()) (Sentence $x $Ev1)) $taskqueuesize)
-                                        (LimitSize (Unique (TupleConcat $Beliefs $derivations) ()) $beliefqueuesize)
-                                        (+ $steps 1)
-                                        $maxsteps
-                                        $taskqueuesize
-                                        $beliefqueuesize))))))
+                 (PLN.Derive (LimitSize (Without (ConcatUnique $Tasks $derivations) (Sentence $x $Ev1)) $taskqueuesize)
+                             (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
+                             (+ $steps 1)
+                             $maxsteps
+                             $taskqueuesize
+                             $beliefqueuesize)))))
 
 (= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize))
@@ -448,12 +465,16 @@
 (= (ConfidenceRank ((stv $f $c) $Ev)) $c)
 (= (ConfidenceRank ()) 0)
 
+(= (BestConfidenceCandidate $tuple)
+   (BestCandidate ConfidenceRank () $tuple))
+
 ;;Pose a question of a certain term to the system on some knowledge base
 (= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize)
-   (BestCandidate ConfidenceRank () (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
-                                                   (case (superpose $BeliefsRet)
-                                                         (((Sentence ($Term $TV) $Ev) (case (== $Term $term)
-                                                                                            ((True ($TV $Ev)))))))))))
+   (BestConfidenceCandidate
+    (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
+                    (case (superpose $BeliefsRet)
+                          (((Sentence ($Term $TV) $Ev) (case (== $Term $term)
+                                                             ((True ($TV $Ev)))))))))))
 
 (= (PLN.Query $kb $term $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Query $kb $kb $term $maxsteps $taskqueuesize $beliefqueuesize))
@@ -463,4 +484,3 @@
 
 (= (PLN.Query $kb $term)
    (PLN.Query $kb $term (PLN.Config.MaxSteps))) ;default steps bound
-
