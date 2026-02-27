@@ -1,12 +1,3 @@
-
-
-## Wiki
-
-Please check out the Wiki:
-
-https://github.com/trueagi-io/PLN/wiki
-
-
 # PLN v0.6 — Release Notes
 
 ## Overview
@@ -17,7 +8,7 @@ PLN v0.6 transitions the Probabilistic Logic Networks (PLN) reasoner to a PeTTa-
 #### PeTTa-based Architecture
 * Reworked the PLN implementation to be used with PeTTa transpiler 
 * Improves consistency with MeTTa tooling and surrounding infrastructure
-* Establishes a clearer long-term foundation for future extensions and optimizations
+* Establishes a clearer long-term maintainable foundation for future research, extensions and optimizations
 
 #### Stability & Execution Improvements
 * More stable and predictable execution behavior
@@ -29,8 +20,22 @@ PLN v0.6 transitions the Probabilistic Logic Networks (PLN) reasoner to a PeTTa-
 * Aligns internal representations and execution model with the broader MeTTa / Hyperon stack
 
 ## What Did Not Change
-
-* Core reasoning capabilities (deductive, inductive, abductive)
-* Priority-queue–based, resource-bounded derivation strategy introduced in v0.5
+* Core declarative reasoning capabilities (deductive, inductive, abductive)
+* Priority-queue–based, resource-bounded derivation strategies introduced in v0.5
 * Focus on truth-value propagation and reasoning under uncertainty
+  
 PLN 0.6 is an architectural and infrastructural evolution, not a redesign of reasoning semantics.
+
+## Who Should Upgrade
+* Users integrating PLN into MeTTa- or PeTTa-based systems
+* Developers building larger reasoning pipelines on top of PLN
+* Anyone seeking a more stable foundation for extending PLN
+
+If you are already using v0.5 examples and workflows, expect minimal conceptual changes, but improved integration behavior.
+
+## Summary
+PLN 0.6 consolidates the reasoner’s architectural foundation through PeTTa-based integration while preserving its established inference mechanisms. The release strengthens interoperability, execution robustness, and maintainability, positioning PLN as a stable component within the MeTTa / Hyperon ecosystem.
+
+## Wiki
+Please check out the Wiki:
+https://github.com/trueagi-io/PLN/wiki
