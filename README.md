@@ -37,5 +37,4 @@ If you are already using v0.5 examples and workflows, expect minimal conceptual 
 PLN v0.6 consolidates the reasoner’s architectural foundation through PeTTa-based integration while preserving its established inference mechanisms. The release strengthens interoperability, execution robustness, and maintainability, positioning PLN as a stable component within the MeTTa / Hyperon ecosystem.
 
 ## Wiki
-Please check out the Wiki:
-https://github.com/trueagi-io/PLN/wiki
+Please check out the [PLN Wiki](https://github.com/trueagi-io/PLN/wiki).
