@@ -1,8 +1,5 @@
 # Probabilistic Logic Networks (PLN)
-PLN is a modern implementation of Probabilistic Logic Networks (PLN) designed to work with the MeTTa / Hyperon ecosystem. It provides a resource-bounded probabilistic reasoning engine capable of performing deductive, inductive, and abductive inference under uncertainty.
-
-This implementation focuses on integration, correctness of truth propagation, and practical execution within MeTTa-based systems.
-
+This repository implements a MeTTa-native Probabilistic Logic Networks (PLN) reasoner intended for practical, resource-aware uncertain inference and designed to work with the MeTTa / Hyperon ecosystem. It incorporates core PLN ideas such as multi-component truth-values, explicit evidence tracking, and rule-based inference while emphasizing bounded inference control capable of performing deductive, inductive, and abductive inference under uncertainty as well as straightforward embedding into MeTTa programs.
 
 ## Theoretical foundations
 Probabilistic Logic Networks (PLN) provide a pragmatic framework for uncertain logical inference, developed in the context of AGI research and grounded in the Assumption of Insufficient Knowledge and Resources (AIKR). PLN integrates deductive, inductive, and abductive reasoning with mechanisms for uncertainty quantification and resource-bounded inference control.
