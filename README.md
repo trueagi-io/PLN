@@ -6,7 +6,7 @@ This repository implements a MeTTa-native Probabilistic Logic Networks (PLN) rea
 * Evidence tracking: Each statement includes an EvidenceID allowing the system to use these IDs to detect when evidence overlaps to avoid double-counting or to make a choice. 
 * Resource-bounded inference control: Inference is limited by a horizon and queue size, using a priority queue (confidence-based) to focus on the most important tasks and reduce unnecessary computation.
 * Compact API (PLN.Derive, PLN.Query): these functions support embedding PLN inference into MeTTa code, returning either the full derived knowledge state or the best-supported answer to a query term. 
-* Executable examples tests: examples (e.g., Smokes, FlyingRaven) illustrate multi-step inference; the test harness runs .metta artifacts via the PeTTa runner to provide lightweight regression coverage. 
+* Executable examples tests: examples (e.g., Smokes, FlyingRaven) illustrate multi-step inference; the test harness runs .metta artifacts via the PeTTa runner to provide regression coverage. 
 
 ## Theoretical foundations
 Probabilistic Logic Networks (PLN) provide a pragmatic framework for uncertain logical inference, developed in the context of AGI research and grounded in the Assumption of Insufficient Knowledge and Resources (AIKR). PLN integrates deductive, inductive, and abductive reasoning with mechanisms for uncertainty quantification and resource-bounded inference control.
