@@ -1,5 +1,12 @@
 # Probabilistic Logic Networks (PLN)
-This repository implements a MeTTa-native Probabilistic Logic Networks (PLN) reasoner intended for practical, resource-aware uncertain inference and designed to work with the MeTTa / Hyperon ecosystem. It incorporates core PLN ideas such as multi-component truth-values, explicit evidence tracking, and rule-based inference while emphasizing bounded inference control capable of performing deductive, inductive, and abductive inference under uncertainty as well as straightforward embedding into MeTTa programs.
+This repository implements a MeTTa-native Probabilistic Logic Networks (PLN) reasoner intended for practical, resource-aware uncertain inference and designed to work with the MeTTa / Hyperon ecosystem. It incorporates key PLN ideas such as multi-component truth-values, explicit evidence tracking, and rule-based inference, while supporting deductive, inductive, and abductive inference under uncertainty. The system is designed for seamless embedding into MeTTa programs and emphasizes inference control for scalable reasoning.
+
+## Key features
+* Multi-component probabilistic truth-values: the implementation uses Simple Truth Value (STV) as `(strength, confidence)` and propagates these values through inference and revision rules. 
+* Evidence tracking: Each statement includes an EvidenceID allowing the system to use these IDs to detect when evidence overlaps to avoid double-counting or to make a choice. 
+* Resource-bounded inference control: Inference is limited by a horizon and queue size, using a priority queue (confidence-based) to focus on the most important tasks and reduce unnecessary computation.
+* Compact API (PLN.Derive, PLN.Query): these functions support embedding PLN inference into MeTTa code, returning either the full derived knowledge state or the best-supported answer to a query term. 
+* Executable examples tests: examples (e.g., Smokes, FlyingRaven) illustrate multi-step inference; the test harness runs .metta artifacts via the PeTTa runner to provide lightweight regression coverage. 
 
 ## Theoretical foundations
 Probabilistic Logic Networks (PLN) provide a pragmatic framework for uncertain logical inference, developed in the context of AGI research and grounded in the Assumption of Insufficient Knowledge and Resources (AIKR). PLN integrates deductive, inductive, and abductive reasoning with mechanisms for uncertainty quantification and resource-bounded inference control.
