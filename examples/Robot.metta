@@ -29,9 +29,8 @@
 
 ;5. Categorize observation using all prior knowledge
 (= (PLNcategorizeObject $label $category)
-   (PLN.Query (TupleConcat (kb)
-                           ((Sentence ((Inheritance $label
-                                                    see) (stv 0.99 0.99)) (99))))
+   (PLN.Query (append (kb)
+                      ((Sentence ((Inheritance $label see) (stv 0.99 0.99)) (99))))
               (Inheritance $label
                            $category)
               )) ;13 7 17)) ;uncomment for example-specific minimal resource usage
