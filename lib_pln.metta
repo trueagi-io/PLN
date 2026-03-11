@@ -1,16 +1,3 @@
-(= (clamp $v $min $max)
-   (min $max (max $v $min)))
-
-;;Concat tuples
-(= (TupleConcat $Ev1 $Ev2)
-   (append $Ev1 $Ev2))
-;   (collapse (superpose ((superpose $Ev1) (superpose $Ev2)))))
-
-;;Count size of tuple
-(= (TupleCount $tuple)
-   (length $tuple))
-;   (if (== $tuple ()) 0 (+ 1 (TupleCount (cdr-atom $tuple)))))
-
 ;Shortcut for and with 5 args
 (= (and5 $0 $1 $2 $3 $4)
    (and $0 (and $1 (and $2 (and $3 $4)))))
@@ -25,81 +12,33 @@
        (/ $A $B)
        (empty)))
 
+;Make sure $v is within the range ($min $max)
+(= (clamp $v $min $max) (min $max (max $v $min)))
 ;Negate (1 minus)
-(= (negate $arg)
-   (- 1.0 $arg))
+(= (negate $arg) (- 1.0 $arg))
 
 ;Invert (1 over)
-(= (invert $arg)
-   (/safe 1.0 $arg))
+(= (invert $arg) (/safe 1.0 $arg))
 
-;;Test case
-(= (Test2 $Is $Should)
-   ((Is: $Is) (Should: $Should) (Passed: (== $Is $Should))))
-
-;; InsertionSort helper: insert element x into sorted list L
-(= (InsertSorted $x $L)
-   (if (== $L ())
-       ($x)
-       (let* (($head (car-atom $L))
-              ($tail (cdr-atom $L)))
-             (if (< $x $head)
-                 (TupleConcat ($x $head) $tail)
-                 (TupleConcat ($head) (InsertSorted $x $tail))))))
-
-;; InsertionSort main
-(= (InsertionSort $L $Ret)
-   (msort $L))
-;   (if (== $L ())
-;       $Ret
-;       (let* (($x (car-atom $L))
-;              ($rest (cdr-atom $L))
-;              ($newRet (InsertSorted $x $Ret)))
-;             (InsertionSort $rest $newRet))))
-
-;;Exclude item from tuple
-(= (Without $Tuple $a)
-   (exclude-item $a $Tuple))
-;   (collapse (let $x (superpose $Tuple)
-;                  (if (== $x $a)
-;                      (empty)
-;                      $x))))
-
-;;Whether a is an element of the tuple
-(= (ElementOf $a $Tuple)
-   (is-member $a $Tuple))
-;   (not (== (collapse (let $x (superpose $Tuple)
-;                           (if (== $x $a)
-;                               True
-;                               (empty)))) ())))
-
-;;Fast but TODO use efficient native handling once available: https://github.com/trueagi-io/metta-morph/pull/27
-(= (Unique $L $Ret)
-   (list_to_set $L))
-;   (if (== $L ())
-;       $Ret
-;       (let* (($x (car-atom $L))
-;              ($rest (cdr-atom $L)))
-;             (if (ElementOf $x $Ret)
-;                 (Unique $rest $Ret)
-;                 (Unique $rest (TupleConcat ($x) $Ret))))))
-
-;;Incremental tuple dedup helpers.
+;Incremental tuple dedup helpers.
 (= (PushUnique $L $x)
-   (if (ElementOf $x $L)
+   (if (is-member $x $L)
        $L
-       (TupleConcat $L ($x))))
+       (append $L ($x))))
 
-(= (ConcatUnique $base $items)
-   (if (== $items ())
-       $base
-       (let* (($head (car-atom $items))
-              ($tail (cdr-atom $items)))
-             (ConcatUnique (PushUnique $base $head) $tail))))
+(= (ConcatUnique $L1 $L2)
+   (if (== $L2 ())
+       $L1
+       (let* (($head (car-atom $L2))
+              ($tail (cdr-atom $L2)))
+             (ConcatUnique (PushUnique $L1 $head) $tail))))
 
-;; Consistency Conditions: PLN book "5.2.2.2 PLN Deduction and Second-Order Probability", page 74:
 
-; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
+
+;; Consistency Conditions: 
+;; PLN book "5.2.2.2 PLN Deduction and Second-Order Probability", page 74:
+;; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
+
 (: smallest-intersection-probability (-> Number Number Number))
 (= (smallest-intersection-probability $As $Bs)
    (clamp (/ (- (+ $As $Bs) 1) $As) 0 1))
@@ -145,14 +84,14 @@
                     (stv $QRs $QRc))
    (if (and (conditional-probability-consistency $Ps $Qs $PQs)
             (conditional-probability-consistency $Qs $Rs $QRs))
-       ;; Preconditions are met
+       ; Preconditions are met
        (stv (if (< 0.9999 $Qs)                  ; avoid division by 0
-                ;; Qs tends to 1
+                ; Qs tends to 1
                 $Rs
-                ;; Otherwise
+                ; Otherwise
                 (+ (* $PQs $QRs) (/safe (* (- 1 $PQs) (- $Rs (* $Qs $QRs))) (- 1 $Qs))))
             (min $Pc (min $Qc (min $Rc (min $PQc $QRc)))))
-       ;; Preconditions are not met
+       ; Preconditions are not met
        (stv 1 0)))
 
 ; Induction formula: PLN book "Appendix A: Comparison of PLN Rules with NARS Rules", page 307
@@ -379,32 +318,32 @@
                                     (STV $B)
                                     (STV $C) $T1 $T2)))
 
-;;How many derivation steps (task selections)
+;How many derivation steps (task selections)
 (= (PLN.Config.MaxSteps) 100)
 
-;;Size of active tasks PQ
+;Size of active tasks PQ
 (= (PLN.Config.TaskQueueSize) 10)
 
-;;Max beliefs buffer size
+;Max beliefs buffer size
 (= (PLN.Config.BeliefQueueSize) 100)
 
-;;Whether evidence was just counted once
+;Whether evidence was just counted once
 (= (StampDisjoint $Ev1 $Ev2)
    (if (== $Ev1 ())
        True
        (let* (($x (car-atom $Ev1))
               ($rest (cdr-atom $Ev1)))
-             (if (ElementOf $x $Ev2)
+             (if (is-member $x $Ev2)
                  False
                  (StampDisjoint $rest $Ev2)))))
 
-;;Concat stamp with sorting
+;Concat stamp with sorting
 (= (StampConcat $stamp $addition)
    (if (== $addition ())
        $stamp
-       (InsertionSort (TupleConcat $stamp $addition) ())))
+       (msort (append $stamp $addition))))
 
-;;retrieve the best candidate (PQ functionality)
+;retrieve the best candidate (PQ functionality)
 (= (BestCandidate $evaluateCandidateFunction $bestCandidate $tuple)
    (if (== $tuple ())
        $bestCandidate
@@ -415,22 +354,22 @@
                  (BestCandidate $evaluateCandidateFunction $head $tail)
                  (BestCandidate $evaluateCandidateFunction $bestCandidate $tail)))))
 
-;;candidate evaluation based on priority
+;candidate evaluation based on priority
 (= (PriorityRank (Sentence ($x (stv $f $c)) $Ev1)) $c)
 (= (PriorityRank ()) -99999.0)
 
-;;candidate elimination based on negated priority
+;candidate elimination based on negated priority
 (= (PriorityRankNeg (Sentence ($x (stv $f $c)) $Ev1)) (- 0.0 $c))
 (= (PriorityRankNeg ()) -99999.0)
 
-;;Return limited-sized version of $L (bounded PQ functionality)
+;Return limited-sized version of $L (bounded PQ functionality)
 (= (LimitSize $L $size)
-   (if (< (TupleCount $L) $size)
+   (if (< (length $L) $size)
        $L
        (let $lowestPriorityItem (BestCandidate PriorityRankNeg () $L)
-            (LimitSize (Without $L $lowestPriorityItem) $size))))
+            (LimitSize (exclude-item $lowestPriorityItem $L) $size))))
 
-;;Priority-queue based task ranking deriver with belief buffer
+;Priority-queue based task ranking deriver with belief buffer
 (= (PLN.Derive $Tasks $Beliefs $steps $maxsteps $taskqueuesize $beliefqueuesize)
    (if (or (> $steps $maxsteps) (== $Tasks ()))
        ($Tasks $Beliefs)
@@ -438,14 +377,14 @@
             (let $derivations
                  (collapse (superpose ((let* (((Sentence $y $Ev2) (superpose $Beliefs)))
                                              (if (StampDisjoint $Ev1 $Ev2)
-                                                 (let $stamp (InsertionSort (TupleConcat $Ev1 $Ev2) ())
+                                                 (let $stamp (msort (append $Ev1 $Ev2))
                                                       (superpose ((case (|- $x $y)
                                                                     ((($Txy $TVxy) (Sentence ($Txy $TVxy) $stamp))))
                                                                   (case (|- $y $x)
                                                                     ((($Tyx $TVyx) (Sentence ($Tyx $TVyx) $stamp)))))))
                                                  (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
-                 (PLN.Derive (LimitSize (Without (ConcatUnique $Tasks $derivations) (Sentence $x $Ev1)) $taskqueuesize)
+                 (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
                              (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
                              (+ $steps 1)
                              $maxsteps
@@ -461,14 +400,14 @@
 (= (PLN.Derive $Tasks $Beliefs)
    (PLN.Derive $Tasks $Beliefs (PLN.Config.MaxSteps)))
 
-;;Candidate evaluation based on confidence
+;Candidate evaluation based on confidence
 (= (ConfidenceRank ((stv $f $c) $Ev)) $c)
 (= (ConfidenceRank ()) 0)
 
 (= (BestConfidenceCandidate $tuple)
    (BestCandidate ConfidenceRank () $tuple))
 
-;;Pose a question of a certain term to the system on some knowledge base
+;Pose a question of a certain term to the system on some knowledge base
 (= (PLN.Query $Tasks $Beliefs $term $maxsteps $taskqueuesize $beliefqueuesize)
    (BestConfidenceCandidate
     (collapse (let ($TasksRet $BeliefsRet) (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
