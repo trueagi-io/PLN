@@ -200,7 +200,7 @@
                                 (stv $ABs $ABc)
                                 (stv $ACs $ACc))
    (let* (($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
-          ($ConclC (* (* $ABs $ACs) (* $ACs $ACc))))
+          ($ConclC (* (* $ABs $ACs) (* $ABc $ACc))))
          (stv $ConclS $ConclC)))
 
 

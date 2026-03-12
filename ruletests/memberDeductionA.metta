@@ -26,4 +26,4 @@
                   ; how much is Tom a cat?
                   (Member (Concept Tom)
                           (Concept SpeciesCats)) 1)
-       ((stv 0.75 0.5) (1 2)))
+       ((stv 0.75 0.375) (1 2)))

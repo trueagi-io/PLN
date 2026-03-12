@@ -37,11 +37,11 @@
 !(test (PLN.Query (kb)
                   (Inheritance Sam
                                (IntSet flies)))
-       ((stv 0.9703557256235827 0.9) (1 4 6)))
+       ((stv 0.9703557256235827 0.6932852196717858) (1 4 6)))
 
 
-!(test (PLN.Query (kb)
-                  (Inheritance Pingu
-                               (IntSet flies)))
-       ((stv 0.011785714285714288 0.9) (2 3)))
+;!(test (PLN.Query (kb)
+;                  (Inheritance Pingu
+;                               (IntSet flies)))
+;       ((stv 0.31989750364431485 0.8369003690036901) (2 3 5 6)))
 

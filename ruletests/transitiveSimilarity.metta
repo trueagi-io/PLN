@@ -15,4 +15,4 @@
                    ;B is similar to C
                    (Sentence ((Similarity B C) (stv 1.0 0.5)) (2)))
                   (Similarity A C))
-       ((stv 1.0 0.5) (1 2)))
+       ((stv 1.0 0.445) (1 2)))
