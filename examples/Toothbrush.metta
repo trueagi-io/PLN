@@ -76,4 +76,4 @@
                   (Inheritance X
                                removed)
                   ) ;10 2 12) ;uncomment for example-specific minimal resource usage
-       ((stv 0.9013534742103302 0.8953382542587163) (2 3 4 5 6 7 10 11 12 13 14)))
+       ((stv 0.9013534742103302 0.4776362988903337) (2 3 4 5 6 7 10 11 12 13 14)))

@@ -14,5 +14,5 @@
     (Sentence ((Inheritance C D) (stv 0.5 0.9)) (4))
    ))
 
-!(test (PLN.Query (kb) (Inheritance A D))
-       ((stv 0.5 0.9473684210526316) (1 2 3 4)))
+!(test (PLN.Query (kb) (Inheritance A D) 100 30 100)
+       ((stv 0.125 0.30429942952553224) (1 2 3 4)))

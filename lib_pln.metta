@@ -75,6 +75,10 @@
 (= (Truth_w2c $w)
    (/safe $w (+ $w 1)))
 
+(: Truth_or (-> Number Number Number))
+(= (Truth_or $a $b) 
+   (- 1 (* (- 1 $a) (- 1 $b))))
+
 ; Deduction formula: PLN book "1.4 Truth-value Formulas", page 15:
 ; borrowed from https://github.com/trueagi-io/hyperon-pln/blob/main/metta/pln/dependent-types/DeductionDTL.metta
 (= (Truth_Deduction (stv $Ps $Pc)
@@ -90,7 +94,7 @@
                 $Rs
                 ; Otherwise
                 (+ (* $PQs $QRs) (/safe (* (- 1 $PQs) (- $Rs (* $Qs $QRs))) (- 1 $Qs))))
-            (min $Pc (min $Qc (min $Rc (min $PQc $QRc)))))
+            (* (* $PQs $QRs) (* $PQc $QRc)))
        ; Preconditions are not met
        (stv 1 0)))
 
@@ -103,9 +107,8 @@
    (stv (+ (/safe (* (* $sBA $sBC) $sB) $sA)
            (* (- 1 (/safe (* $sBA $sB) $sA))
               (/safe (- $sC (* $sB $sBC)) (- 1 $sB))))
-        (Truth_w2c (min $cBA $cBC)))) ;confidence TODO check
+        (Truth_w2c (* (* $sBC $cBC) $cBA))))
 
-; Abduction formula: PLN book "Appendix A: Comparison of PLN Rules with NARS Rules", page 307
 (= (Truth_Abduction (stv $sA $cA)
                     (stv $sB $cB)
                     (stv $sC $cC)
@@ -115,19 +118,19 @@
                   $sB)
            (/safe (* $sC (* (- 1 $sAB) (- 1 $sCB)))
                   (- 1 $sB)))
-        (Truth_w2c (min $cAB $cCB)))) ;confidence TODO check
+        (Truth_w2c (* (* $sAB $cAB) $cCB))))
 
 ;Modus Ponens: PLN book "5.7.1 Modus Ponens", page 111:
-(= (Truth_ModusPonens (stv $f1 $c1) (stv $f2 $c2)) 
-   (stv (+ (* $f1 $f2) (* 0.02 (- 1 $f1)))
-        (* $c1 $c2))) ;min overestimates here as we do not have access to node probabilities
+(= (Truth_ModusPonens (stv $Ps $Pc) (stv $PQs $PQc)) 
+   (stv (+ (* $Ps $PQs) (* 0.02 (- 1 $Ps)))
+        (* (* $Ps $PQs) (* $Pc $PQc))))
 
 ; SymmetricModusPonens rule   see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/symmetric-modus-ponens.scm
 (= (Truth_SymmetricModusPonens (stv $sA $cA) (stv $sAB $cAB))
    (let* (($snotAB 0.2)
           ($cnotAB 1.0))
          (stv (+ (* $sA $sAB) (* (* $snotAB (negate $sA)) (+ 1.0 $sAB)))
-              (min (min $cAB $cnotAB) $cA))))
+              (* (* $cA $cAB) (Truth_or $sA $sAB)))))
 
 ;Revision: PLN Book "5.10.2 A Heuristic Revision Rule for Simple Truth-values", page 116:
 (= (Truth_Revision (stv $f1 $c1) (stv $f2 $c2))
@@ -174,7 +177,7 @@
                                (stv $ABs $ABc)
                                (stv $BCs $BCc))
    (let* (($ConclS (TransitiveSimilarityStrength $As $Bs $Cs $ABs $BCs))
-          ($ConclC (min $ABc $BCc)))
+          ($ConclC (* (* $ABc $BCc) (Truth_or $ABs $BCs))))
          (stv $ConclS $ConclC)))
 
 ; see https://github.com/opencog/pln/blob/master/opencog/pln/rules/wip/formulas.scm
@@ -197,9 +200,10 @@
                                 (stv $ABs $ABc)
                                 (stv $ACs $ACc))
    (let* (($ConclS (simpleDeductionStrength $Bs $As $Cs $ABs $ACs))
-          ($ConclC (* (* 0.9 0.9)
-                      (min5 $Bc $Ac $Cc $ACc (* 0.9 $ABc)))))
+          ($ConclC (* (* $ABs $ACs) (* $ABc $ACc))))
          (stv $ConclS $ConclC)))
+
+
 
 ;; INFERENCE RULES
 
@@ -384,12 +388,13 @@
                                                                     ((($Tyx $TVyx) (Sentence ($Tyx $TVyx) $stamp)))))))
                                                  (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
-                 (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
-                             (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
-                             (+ $steps 1)
-                             $maxsteps
-                             $taskqueuesize
-                             $beliefqueuesize)))))
+                 (progn (println! (SELECTED (Sentence $x $Ev1)))
+                        (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
+                                    (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
+                                    (+ $steps 1)
+                                    $maxsteps
+                                    $taskqueuesize
+                                    $beliefqueuesize))))))
 
 (= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize))
