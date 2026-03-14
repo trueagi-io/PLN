@@ -13,12 +13,5 @@
     (Sentence ((Inheritance rv2 (IntSet black)) (stv 0.0 0.9)) (4))
    ))
 
-!(let ($tasks $beliefs) (PLN.Derive (kb) (kb))
-      (for $belief $beliefs
-           (add-atom &beliefs $belief)))
-
-!(PLN.Derive (cons (Sentence ((Inheritance rv1 raven) (stv 1.0 0.9)) (5)) 
-                   (get-atoms &beliefs))
-             (get-atoms &beliefs))
-
-;!(PLN.Query (kb) (Inheritance raven (IntSet black)))
+!(test (PLN.Query (kb) (Inheritance raven (IntSet black)))
+       ((stv 0.38000000000000006 0.6541049798115747) (1 2 3 4)))

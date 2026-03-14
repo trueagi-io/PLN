@@ -388,12 +388,13 @@
                                                                     ((($Tyx $TVyx) (Sentence ($Tyx $TVyx) $stamp)))))))
                                                  (empty)))
                                        (case (|- $x) ((($T3 $TV3) (Sentence ($T3 $TV3) $Ev1)))))))
-                 (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
-                             (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
-                             (+ $steps 1)
-                             $maxsteps
-                             $taskqueuesize
-                             $beliefqueuesize)))))
+                 (progn (println! (SELECTED (Sentence $x $Ev1)))
+                        (PLN.Derive (LimitSize (exclude-item (Sentence $x $Ev1) (ConcatUnique $Tasks $derivations)) $taskqueuesize)
+                                    (LimitSize (ConcatUnique $Beliefs $derivations) $beliefqueuesize)
+                                    (+ $steps 1)
+                                    $maxsteps
+                                    $taskqueuesize
+                                    $beliefqueuesize))))))
 
 (= (PLN.Derive $Tasks $Beliefs $maxsteps $taskqueuesize $beliefqueuesize)
    (PLN.Derive $Tasks $Beliefs 1 $maxsteps $taskqueuesize $beliefqueuesize))

@@ -18,9 +18,11 @@
                             Penguin)
                (stv 0.99 0.9)) (2))
     
-    (Sentence ((Inheritance Penguin
-                            (IntSet flies))
-               (stv 0.01 0.9)) (3))
+    (Sentence ((Implication (Inheritance $1
+                                         Penguin)
+                            (Not (Inheritance $1
+                                              (IntSet flies))))
+               (stv 1.0 0.9)) (3))
 
     (Sentence ((Inheritance Raven
                             Bird)
@@ -40,8 +42,8 @@
        ((stv 0.9703557256235827 0.6932852196717858) (1 4 6)))
 
 
-;!(test (PLN.Query (kb)
-;                  (Inheritance Pingu
-;                               (IntSet flies)))
-;       ((stv 0.31989750364431485 0.8369003690036901) (2 3 5 6)))
+!(test (PLN.Query (kb)
+                  (Inheritance Pingu
+                               (IntSet flies)))
+       ((stv 0.009800000000000031 0.8019000000000001) (2 3)))
 
